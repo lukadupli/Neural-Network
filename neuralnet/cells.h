@@ -4,20 +4,31 @@
 #include "helpers.h"
 #include "neural_net.h"
 
+namespace Nets {
+    class Neural_Net;
+}
+
 namespace Nets::Cells
 {
     class Cell
     {
     protected:
-        int input_sz, output_sz;
+        int input_sz, hidden_sz, output_sz;
     public:
         virtual ~Cell() {}
         virtual Cell* Clone() const = 0;
 
         virtual void Reset_Hid() = 0;
+        virtual void Reset_Back_Hid() = 0;
 
         int Input_Size() const;
+        int Hidden_Size() const;
         int Output_Size() const;
+        
+        virtual Neural_Net& Gate() const;
+
+        virtual void Set_In_Size(int input_sz_) = 0;
+        virtual void Set_Out_Size(int output_sz_) = 0;
 
         virtual row_vector Forward(row_vector in) = 0;
         virtual row_vector Backward(row_vector grads) = 0;
@@ -34,8 +45,6 @@ namespace Nets::Cells
         }
     };
 }
-
-#include "basic_cell.h"
 
 std::istream& operator>>(std::istream& str, Nets::Cells::Cell* c);
 std::ostream& operator<<(std::ostream& str, Nets::Cells::Cell* c);

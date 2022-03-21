@@ -4,8 +4,9 @@
 namespace Nets
 {
     void DenseL::Weight_Init(int input, int output, bool del) {
-        if (del) delete weights;
+        if (del) delete weights, cache;
         weights = new Eigen::MatrixXd(input_sz, output_sz);
+        cache = row_vector(input_sz);
 
         bias = 0;
 
@@ -26,8 +27,6 @@ namespace Nets
 
         Init_Random = Init_Random_;
 
-        cache = row_vector(input_sz);
-
         Weight_Init(input_sz, output_sz, 0);
     }
 
@@ -42,6 +41,7 @@ namespace Nets
 
         Init_Random = org.Init_Func();
 
+        bias = org.Bias();
         weights = new Eigen::MatrixXd(org.Weights());
     }
 
@@ -66,7 +66,8 @@ namespace Nets
     double DenseL::Bias_Lrate() const { return bias_lrate; }
     void DenseL::Set_Bias_Lrate(double new_bias_lrate) { bias_lrate = new_bias_lrate; }
 
-    Eigen::MatrixXd& DenseL::Weights() const { return *weights; }
+    double DenseL::Bias() const { return bias; }
+    Eigen::MatrixXd DenseL::Weights() const { return *weights; }
 
     row_vector DenseL::Forward(row_vector input) {
         if (input.size() != input_sz) throw std::runtime_error("Dense layer: rececived query list doesn't match specified size\n");
@@ -99,7 +100,7 @@ namespace Nets
     }
 
     std::istream& DenseL::Read(std::istream& stream) {
-        stream >> input_sz >> output_sz >> lrate;
+        stream >> input_sz >> output_sz >> lrate >> bias_lrate;
 
         weights = new Eigen::MatrixXd(input_sz, output_sz);
         for (int i = 0; i < weights->rows(); i++) {
@@ -111,7 +112,7 @@ namespace Nets
         return stream;
     }
     std::ostream& DenseL::Write(std::ostream& stream) {
-        stream << DENSE << '\n' << input_sz << ' ' << output_sz << ' ' << lrate << '\n' << *weights << '\n' << bias << '\n';
+        stream << DENSE << '\n' << input_sz << ' ' << output_sz << ' ' << lrate << ' ' << bias_lrate << '\n' << *weights << '\n' << bias << '\n';
         return stream;
     }
 }

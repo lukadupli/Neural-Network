@@ -3,14 +3,17 @@
 
 namespace Nets
 {
-    Neural_Net::Neural_Net(std::vector<Layer*> layers_, double (*Error_Part_Deriv_)(double, double)) {
+    Neural_Net::Neural_Net(std::vector<Layer*> layers_, rvd_F_rvd_rvd Loss_Deriv_, d_F_rvd_rvd Loss_Func_) {
         layers = layers_;
-        Error_Part_Deriv = Error_Part_Deriv_;
+        Loss_Deriv = Loss_Deriv_;
+        Loss_Func = Loss_Func_;
 
         Manage_In_Sizes(layers.front()->Input_Size());
     }
-    Neural_Net::Neural_Net(const char* path, double (*Error_Part_Deriv_)(double, double)) {
-        Error_Part_Deriv = Error_Part_Deriv_;
+    Neural_Net::Neural_Net(const char* path, rvd_F_rvd_rvd Loss_Deriv_, d_F_rvd_rvd Loss_Func_) {
+        Loss_Deriv = Loss_Deriv_;
+        Loss_Func = Loss_Func_;
+
         Load(path);
     }
     Neural_Net::~Neural_Net() {
@@ -18,19 +21,22 @@ namespace Nets
     }
 
     Neural_Net::Neural_Net(const Neural_Net& org) {
-        Error_Part_Deriv = org.Get_Error_Deriv();
+        Loss_Deriv = org.Get_Loss_Deriv();
+        Loss_Func = org.Get_Loss_Func();
 
-        layers = org.Layers();
+        layers = org.Layers_Copy();
     }
 
-    std::vector<Layer*> Neural_Net::Layers() const {
+    std::vector<Layer*> Neural_Net::Layers() { return layers; }
+    std::vector<Layer*> Neural_Net::Layers_Copy() const {
         std::vector<Layer*> ret;
 
         for (auto e : layers) ret.push_back(e->Clone());
 
         return ret;
     }
-    Neural_Net::dfdd Neural_Net::Get_Error_Deriv() const { return Error_Part_Deriv; }
+    Neural_Net::rvd_F_rvd_rvd Neural_Net::Get_Loss_Deriv() const { return Loss_Deriv; }
+    Neural_Net::d_F_rvd_rvd Neural_Net::Get_Loss_Func() const { return Loss_Func; }
 
     void Neural_Net::Manage_In_Sizes(int input_size) {
         for (auto lay : layers) {
@@ -45,8 +51,8 @@ namespace Nets
         }
     }
 
-    void Neural_Net::Universal_Activation(double (*Act_Func)(double), double (*Act_Func_Deriv)(double)) {
-        for (auto lay : layers) lay->Set_Functions(Act_Func, Act_Func_Deriv);
+    void Neural_Net::Universal_Activation(rvd_F_rvd Act_Func, rvd_F_rvd Act_Deriv) {
+        for (auto lay : layers) lay->Set_Functions(Act_Func, Act_Deriv);
     }
     void Neural_Net::Universal_Lrate(double lrate) {
         for (auto lay : layers) lay->Set_Lrate(lrate);
@@ -73,14 +79,19 @@ namespace Nets
         return Back_Query(Vec2Eig(grads));
     }
 
-    row_vector Neural_Net::Train(const row_vector& input, const row_vector& target) {
-        row_vector grads = Query(input);
+    double Neural_Net::Train(const row_vector& input, const row_vector& target) {
+        row_vector out = Query(input);
 
-        for (int i = 0; i < grads.size(); i++) grads(i) = Error_Part_Deriv(grads(i), target(i));
+        double ret = 0;
 
-        return Back_Query(grads);
+        if (target.size() != out.size()) throw std::runtime_error("Neural_Net : given target doesn't match output size\n");
+        if (Loss_Func) ret = Loss_Func(out, target);
+
+        Back_Query(Loss_Deriv(out, target));
+
+        return ret;
     }
-    row_vector Neural_Net::Train(const std::vector<double>& input, const std::vector<double>& target) {
+    double Neural_Net::Train(const std::vector<double>& input, const std::vector<double>& target) {
         return Train(Vec2Eig(input), Vec2Eig(target));
     }
 
@@ -121,6 +132,11 @@ namespace Nets
                 break;
             case ACT:
                 layers.push_back(new ActL);
+                stream >> layers.back();
+
+                break;
+            case REC:
+                layers.push_back(new RecL);
                 stream >> layers.back();
 
                 break;

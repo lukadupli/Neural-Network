@@ -1,6 +1,7 @@
 #pragma once
 
 #include "helpers.h"
+#include "cells.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -14,26 +15,29 @@ namespace Nets {
     protected:
         double (*Init_Random)(int, int);
 
+        typedef row_vector(*rvd_F_rvd)(const row_vector&);
         typedef double (*dfii)(int, int);
     public:
         virtual ~Layer() {}
         virtual Layer* Clone() const = 0;
 
         virtual int Input_Size() const = 0;
-        virtual void Set_In_Size(int) = 0;
+        virtual void Set_In_Size(int) {};
 
         virtual int Output_Size() const = 0;
-        virtual void Set_Out_Size(int) = 0;
+        virtual void Set_Out_Size(int) {};
 
-        virtual void Set_Size(const std::vector<int>&) = 0;
+        virtual Cells::Cell* Cell() const;
+
+        virtual void Set_Size(const std::vector<int>&) {};
 
         void Set_Init_Func(dfii);
         dfii Init_Func() const;
 
-        virtual void Set_Lrate(double) = 0;
+        virtual void Set_Lrate(double) {}
         virtual void Set_Bias_Lrate(double) {}
 
-        virtual void Set_Functions(double (*)(double), double (*)(double)) {}
+        virtual void Set_Functions(rvd_F_rvd, rvd_F_rvd) {}
 
         virtual row_vector Forward(row_vector) = 0;
         virtual row_vector Backward(row_vector) = 0;
@@ -53,6 +57,3 @@ namespace Nets {
 
 std::istream& operator>>(std::istream& istr, Nets::Layer* lay);
 std::ostream& operator<<(std::ostream& ostr, Nets::Layer* lay);
-
-#include "dense_layer.h"
-#include "act_layer.h"

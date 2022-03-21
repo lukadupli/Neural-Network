@@ -1,5 +1,9 @@
 // Tester.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+#define EXCLUD
+
+#ifndef EXCLUDE
+
 
 #include <iostream>
 #include <filesystem>
@@ -43,15 +47,12 @@ Neural_Net netorg({ new DenseL(28 * 28, 200, 0),
 const double MIN_IN = 0.01, MAX_IN = 0.99;
 const double ZERO_OUT = 0.01, ONE_OUT = 0.99;
 
-bool load = 1, save = 0;
+bool load = 0, save = 0;
 
 string full_path(const char* path) {
     return string(LOCATION) + string(path);
 }
 
-#define NO_MAIN
-
-#ifndef NO_MAIN
 int main()
 {
     if (load) netorg.Load(full_path("saved/net1.txt"));
@@ -112,7 +113,7 @@ int main()
         while (1) {
             memset(loc, 0, sizeof loc);
 
-            sprintf_s(loc, full_path("samples/training/%d_%d.png").c_str(), int(c), cnt);
+            sprintf_s(loc, full_path("samples/test/%d_%d.png").c_str(), int(c), cnt);
 
             if (!filesystem::exists(loc)) break;
 

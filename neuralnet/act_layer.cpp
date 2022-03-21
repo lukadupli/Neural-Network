@@ -3,7 +3,7 @@
 
 namespace Nets
 {
-    ActL::ActL(double (*Act_Func_)(double), double (*Act_Deriv_)(double)) {
+    ActL::ActL(rvd_F_rvd Act_Func_, rvd_F_rvd Act_Deriv_) {
         Act_Func = Act_Func_;
         Act_Deriv = Act_Deriv_;
     }
@@ -26,19 +26,24 @@ namespace Nets
 
     void ActL::Set_Lrate(double new_lrate) {};
 
-    ActL::dfd ActL::Get_Act_Func() const { return Act_Func; }
-    ActL::dfd ActL::Get_Act_Deriv() const { return Act_Deriv; }
-    void ActL::Set_Functions(double (*New_Act_Func)(double), double (*New_Act_Deriv)(double)) {
+    ActL::rvd_F_rvd ActL::Get_Act_Func() const { return Act_Func; }
+    ActL::rvd_F_rvd ActL::Get_Act_Deriv() const { return Act_Deriv; }
+    void ActL::Set_Functions(rvd_F_rvd New_Act_Func, rvd_F_rvd New_Act_Deriv) {
         Act_Func = New_Act_Func;
         Act_Deriv = New_Act_Deriv;
     }
 
-    row_vector ActL::Forward(row_vector input) { return cache = input.unaryExpr(Act_Func); }
+    row_vector ActL::Forward(row_vector input) { 
+        cache = input;
+        return Act_Func(input); 
+    }
 
     row_vector ActL::Backward(row_vector gradients) {
-        for (int i = 0; i < gradients.size(); i++) gradients(i) *= Act_Deriv(cache(i));
+        row_vector ret = Act_Deriv(cache);
 
-        return gradients;
+        for (int i = 0; i < gradients.size(); i++) ret(i) *= gradients(i);
+
+        return ret;
     }
 
     std::istream& ActL::Read(std::istream& stream) { return stream; }

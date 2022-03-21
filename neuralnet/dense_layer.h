@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
-#include <math.h>
+#include <cmath>
 #include <Eigen/Dense>
 
 namespace Nets
@@ -46,7 +46,8 @@ namespace Nets
         double Bias_Lrate() const;
         void Set_Bias_Lrate(double new_bias_lrate) override;
 
-        Eigen::MatrixXd& Weights() const;
+        double Bias() const;
+        Eigen::MatrixXd Weights() const;
 
         row_vector Forward(row_vector input) override;
         row_vector Backward(row_vector gradients) override;

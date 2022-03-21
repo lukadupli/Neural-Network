@@ -4,6 +4,7 @@
 namespace Nets
 {
     Layer::dfii Layer::Init_Func() const { return Init_Random; }
+    Cells::Cell* Layer::Cell() const { return nullptr; }
     void Layer::Set_Init_Func(dfii New_Init) { Init_Random = New_Init; }
 }
 

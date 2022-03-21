@@ -14,15 +14,13 @@ namespace Nets
     private:
         int sz;
 
-        double (*Act_Func)(double);
-        double (*Act_Deriv)(double);
-
-        typedef double(*dfd)(double);
+        row_vector (*Act_Func)(const row_vector&) = Sigmoid;
+        row_vector (*Act_Deriv)(const row_vector&) = Sigmoid_Deriv;
 
         row_vector cache;
     public:
         ActL() = default;
-        ActL(double (*Act_Func_)(double), double (*Act_Deriv_)(double));
+        ActL(rvd_F_rvd Act_Func_, rvd_F_rvd Act_Deriv_);
 
         ActL(const ActL&);
 
@@ -36,9 +34,9 @@ namespace Nets
 
         void Set_Lrate(double new_lrate) override;
 
-        dfd Get_Act_Func() const;
-        dfd Get_Act_Deriv() const;
-        void Set_Functions(double (*New_Act_Func)(double), double (*New_Act_Deriv)(double)) override;
+        rvd_F_rvd Get_Act_Func() const;
+        rvd_F_rvd Get_Act_Deriv() const;
+        void Set_Functions(rvd_F_rvd New_Act_Func, rvd_F_rvd New_Act_Deriv) override;
 
         row_vector Forward(row_vector input) override;
         row_vector Backward(row_vector gradients) override;

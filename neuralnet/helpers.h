@@ -16,28 +16,33 @@ namespace Nets {
 
     template <typename T> using ilist = std::initializer_list<T>;
 
-    typedef Eigen::MatrixX <double> Matrix;
     typedef Eigen::RowVectorXd row_vector;
     typedef Eigen::VectorXd col_vector;
 
     double Scale(double val, double mini1, double maxi1, double mini2, double maxi2);
 
-    double Sigmoid(double x);
-    double Sigmoid_Reverse(double y);
-    double Sigmoid_Deriv(double x);
+    row_vector Sigmoid(const row_vector& x);
+    row_vector Sigmoid_Deriv(const row_vector& x);
 
-    double ReLU(double x);
-    double ReLU_Deriv(double x);
+    row_vector Tanh(const row_vector& x);
+    row_vector Tanh_Deriv(const row_vector& x);
 
-    double ELU(double x);
-    double ELU_Deriv(double x);
+    row_vector ReLU(const row_vector& x);
+    row_vector ReLU_Deriv(const row_vector& x); 
+    
+    row_vector Softmax(const row_vector& in);
+    row_vector Softmax_Deriv(const row_vector& in);
 
     double Default_Random(int, int);
 
-    double Squared_Error_Deriv(double o, double t);
+    double Cross_Entropy_Loss(const row_vector& out, const row_vector& target);
+    row_vector Cross_Entropy_Loss_Deriv(const row_vector& out, const row_vector& target);
+
+    row_vector Sq_Loss_Deriv(const row_vector& out, const row_vector& target);
+    double Sq_Loss(const row_vector& out, const row_vector& target);
 
     template <typename T>
-    inline Eigen::RowVectorX <T> Vec2Eig(std::vector<T> v) {
+    inline Eigen::RowVectorX <T> Vec2Eig(const std::vector<T>& v) {
         Eigen::RowVectorX <T> ret;
         ret.resize(v.size());
 

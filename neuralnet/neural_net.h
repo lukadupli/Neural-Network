@@ -5,35 +5,47 @@
 #include <string>
 #include <fstream>
 
-#include "layers.h"
 #include "helpers.h"
+
+#include "layers.h"
+
+#include "dense_layer.h"
+#include "act_layer.h"
+#include "recurrent_layer.h"
 
 namespace Nets
 {
     class Neural_Net
     {
     private:
-        std::vector<Layer*> layers;
+        std::vector<Layer*> layers = {};
 
-        double (*Error_Part_Deriv)(double, double);
+        typedef row_vector(*rvd_F_rvd_rvd)(const row_vector&, const row_vector&);
+        typedef double(*d_F_rvd_rvd)(const row_vector&, const row_vector&);
+        typedef row_vector(*rvd_F_rvd)(const row_vector&);
+        
+        d_F_rvd_rvd Loss_Func = nullptr;
+        rvd_F_rvd_rvd Loss_Deriv = Sq_Loss_Deriv;
 
-        typedef double(*dfdd)(double, double);
     public:
-        Neural_Net(std::vector<Layer*> layers_, double (*Error_Part_Deriv_)(double, double) = Squared_Error_Deriv);
-        Neural_Net(const char* path, double (*Error_Part_Deriv_)(double, double));
+        Neural_Net() = default;
+        Neural_Net(std::vector<Layer*> layers_, rvd_F_rvd_rvd Loss_Deriv_ = Sq_Loss_Deriv, d_F_rvd_rvd Loss_Func_ = nullptr);
+        Neural_Net(const char* path, rvd_F_rvd_rvd Loss_Deriv_ = Sq_Loss_Deriv, d_F_rvd_rvd Loss_Func_ = nullptr);
         ~Neural_Net();
 
         Neural_Net(const Neural_Net& org);
 
-        std::vector<Layer*> Layers() const;
-        dfdd Get_Error_Deriv() const;
+        std::vector<Layer*> Layers();
+        std::vector<Layer*> Layers_Copy() const;
+        rvd_F_rvd_rvd Get_Loss_Deriv() const;
+        d_F_rvd_rvd Get_Loss_Func() const;
 
         void Manage_In_Sizes(int input_size);
         void Manage_Out_Sizes(int output_size);
 
         void Universal_Lrate(double lrate);
         void Universal_Bias_Lrate(double bias_lrate);
-        void Universal_Activation(double (*Act_Func)(double), double (*Act_Func_Deriv)(double));
+        void Universal_Activation(rvd_F_rvd Act_Func, rvd_F_rvd Act_Deriv);
 
         row_vector Query(row_vector input);
         row_vector Query(const std::vector<double>& input);
@@ -41,8 +53,8 @@ namespace Nets
         row_vector Back_Query(row_vector grads);
         row_vector Back_Query(const std::vector<double>& grads);
 
-        row_vector Train(const row_vector& input, const row_vector& target);
-        row_vector Train(const std::vector<double>& input, const std::vector<double>& target);
+        double Train(const row_vector& input, const row_vector& target);
+        double Train(const std::vector<double>& input, const std::vector<double>& target);
 
         void Save(std::ostream& stream);
         void Save(const std::string& path);
