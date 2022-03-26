@@ -14,6 +14,10 @@ namespace Nets
         Act_Deriv = org.Get_Act_Deriv();
     }
 
+    ActL::~ActL(){
+        delete cache;
+    }
+
     int ActL::Input_Size() const { return sz; };
     void ActL::Set_In_Size(int in) { Set_Size({ in }); }
 
@@ -33,13 +37,18 @@ namespace Nets
         Act_Deriv = New_Act_Deriv;
     }
 
-    row_vector ActL::Forward(row_vector input) { 
-        cache = input;
+    row_vector ActL::Forward(row_vector input, bool rec) { 
+        if (!rec) cache->clear();
+
+        cache->push_back(input);
         return Act_Func(input); 
     }
 
     row_vector ActL::Backward(row_vector gradients) {
-        row_vector ret = Act_Deriv(cache);
+        if (cache->empty()) throw std::runtime_error("Backward without previous forward\n");
+
+        row_vector ret = Act_Deriv(cache->back());
+        cache->pop_back();
 
         for (int i = 0; i < gradients.size(); i++) ret(i) *= gradients(i);
 

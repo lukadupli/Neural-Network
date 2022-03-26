@@ -47,14 +47,14 @@ namespace Nets
         void Universal_Bias_Lrate(double bias_lrate);
         void Universal_Activation(rvd_F_rvd Act_Func, rvd_F_rvd Act_Deriv);
 
-        row_vector Query(row_vector input);
-        row_vector Query(const std::vector<double>& input);
+        row_vector Query(row_vector input, bool rec = 0);
+        row_vector Query(const std::vector<double>& input, bool rec = 0);
 
         row_vector Back_Query(row_vector grads);
         row_vector Back_Query(const std::vector<double>& grads);
 
-        double Train(const row_vector& input, const row_vector& target);
-        double Train(const std::vector<double>& input, const std::vector<double>& target);
+        double Train(const row_vector& input, const row_vector& target, bool rec = 0);
+        double Train(const std::vector<double>& input, const std::vector<double>& target, bool rec = 0);
 
         void Save(std::ostream& stream);
         void Save(const std::string& path);

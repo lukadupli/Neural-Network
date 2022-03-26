@@ -56,7 +56,7 @@ namespace Nets::Cells
         row_vector carry(input_sz + hidden_sz);
         carry << in, *hid;
 
-        carry = gate->Query(carry);
+        carry = gate->Query(carry, 1);
 
         *hid = carry.tail(hidden_sz);
         return carry.head(output_sz);

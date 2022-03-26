@@ -61,13 +61,13 @@ namespace Nets
         for (auto lay : layers) lay->Set_Bias_Lrate(bias_lrate);
     }
 
-    row_vector Neural_Net::Query(row_vector input) {
-        for (auto lay : layers) input = lay->Forward(input);
+    row_vector Neural_Net::Query(row_vector input, bool rec) {
+        for (auto lay : layers) input = lay->Forward(input, rec);
 
         return input;
     }
-    row_vector Neural_Net::Query(const std::vector<double>& input) {
-        return Query(Vec2Eig<double>(input));
+    row_vector Neural_Net::Query(const std::vector<double>& input, bool rec) {
+        return Query(Vec2Eig<double>(input), rec);
     }
 
     row_vector Neural_Net::Back_Query(row_vector grads) {
@@ -79,8 +79,8 @@ namespace Nets
         return Back_Query(Vec2Eig(grads));
     }
 
-    double Neural_Net::Train(const row_vector& input, const row_vector& target) {
-        row_vector out = Query(input);
+    double Neural_Net::Train(const row_vector& input, const row_vector& target, bool rec) {
+        row_vector out = Query(input, rec);
 
         double ret = 0;
 
@@ -91,8 +91,8 @@ namespace Nets
 
         return ret;
     }
-    double Neural_Net::Train(const std::vector<double>& input, const std::vector<double>& target) {
-        return Train(Vec2Eig(input), Vec2Eig(target));
+    double Neural_Net::Train(const std::vector<double>& input, const std::vector<double>& target, bool rec) {
+        return Train(Vec2Eig(input), Vec2Eig(target), rec);
     }
 
     void Neural_Net::Save(std::ostream& stream) {

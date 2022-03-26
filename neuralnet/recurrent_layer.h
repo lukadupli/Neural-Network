@@ -35,7 +35,7 @@ namespace Nets {
 		
 		Cells::Cell* Cell() const override;
 
-		row_vector Forward(row_vector in) override;
+		row_vector Forward(row_vector in, bool rec = 0) override;
 		row_vector Backward(row_vector grads) override;
 
 		std::istream& Read(std::istream& stream) override;

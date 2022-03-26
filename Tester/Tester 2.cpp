@@ -1,4 +1,4 @@
-#define EXCLUDE
+#define EXCLUD
 
 #ifndef EXCLUDE
 
@@ -46,7 +46,7 @@ Neural_Net rnn({
 				new DenseL(10, 10, 0.3, 0.6),
 				new ActL(Tanh, Tanh_Deriv),
 				new DenseL(10, 2, 0.6, 1.2),
-				new ActL(Sigmoid, Sigmoid_Deriv)
+				//new ActL(Sigmoid, Sigmoid_Deriv)
 			})
 		),
 	END),

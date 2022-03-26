@@ -39,7 +39,7 @@ namespace Nets {
 
 	Cells::Cell* RecL::Cell() const { return cell; }
 
-	row_vector RecL::Forward(row_vector in) {
+	row_vector RecL::Forward(row_vector in, bool rec) {
 		if (in.size() % input_sz) throw std::runtime_error("Recurrent layer: cannot split the input into blocks of specified input size (remainder > 0)\n");
 		
 		in_count = in.size() / input_sz;

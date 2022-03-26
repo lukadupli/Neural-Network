@@ -6,7 +6,6 @@ namespace Nets
     void DenseL::Weight_Init(int input, int output, bool del) {
         if (del) delete weights, cache;
         weights = new Eigen::MatrixXd(input_sz, output_sz);
-        cache = row_vector(input_sz);
 
         bias = 0;
 
@@ -37,15 +36,13 @@ namespace Nets
         lrate = org.Lrate();
         bias_lrate = org.Bias_Lrate();
 
-        cache = row_vector(input_sz);
-
         Init_Random = org.Init_Func();
 
         bias = org.Bias();
         weights = new Eigen::MatrixXd(org.Weights());
     }
 
-    DenseL::~DenseL() { delete weights; }
+    DenseL::~DenseL() { delete weights, cache; }
 
     int DenseL::Input_Size() const { return input_sz; };
     void DenseL::Set_In_Size(int in) { Set_Size({ in, SAME_SIZE }); }
@@ -69,10 +66,12 @@ namespace Nets
     double DenseL::Bias() const { return bias; }
     Eigen::MatrixXd DenseL::Weights() const { return *weights; }
 
-    row_vector DenseL::Forward(row_vector input) {
+    row_vector DenseL::Forward(row_vector input, bool rec) {
         if (input.size() != input_sz) throw std::runtime_error("Dense layer: rececived query list doesn't match specified size\n");
 
-        cache = input;
+        if (!rec) cache->clear();
+
+        cache->push_back(input);
         input *= (*weights);
 
         for (int i = 0; i < output_sz; i++) input.coeffRef(i) += bias;
@@ -82,14 +81,16 @@ namespace Nets
 
     row_vector DenseL::Backward(row_vector gradients) {
         if (gradients.size() != output_sz) throw std::runtime_error("Dense layer: rececived gradient list doesn't match specified size\n");
+        if (cache->empty()) throw std::runtime_error("Backward without previous forward\n");
 
         row_vector new_grads = gradients * weights->transpose();
 
         for (int i = 0; i < weights->rows(); i++) {
             for (int j = 0; j < weights->cols(); j++) {
-                weights->coeffRef(i, j) -= lrate * cache(i) * gradients(j);
+                weights->coeffRef(i, j) -= lrate * cache->back()(i) * gradients(j);
             }
         }
+        cache->pop_back();
 
         double dL_db = 0.;
         for (int i = 0; i < gradients.size(); i++) dL_db += gradients.coeffRef(i);
