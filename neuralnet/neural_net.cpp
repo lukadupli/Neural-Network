@@ -51,7 +51,7 @@ namespace Nets
         }
     }
 
-    void Neural_Net::Universal_Activation(rvd_F_rvd Act_Func, rvd_F_rvd Act_Deriv) {
+    void Neural_Net::Universal_Activation(rvd_F_rvd Act_Func, mat_F_rvd Act_Deriv) {
         for (auto lay : layers) lay->Set_Functions(Act_Func, Act_Deriv);
     }
     void Neural_Net::Universal_Lrate(double lrate) {

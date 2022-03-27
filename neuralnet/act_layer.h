@@ -15,10 +15,10 @@ namespace Nets
         int sz;
 
         row_vector (*Act_Func)(const row_vector&) = Sigmoid;
-        row_vector (*Act_Deriv)(const row_vector&) = Sigmoid_Deriv;
+        matrix (*Act_Deriv)(const row_vector&) = Sigmoid_Deriv;
     public:
         ActL() = default;
-        ActL(rvd_F_rvd Act_Func_, rvd_F_rvd Act_Deriv_);
+        ActL(rvd_F_rvd Act_Func_, mat_F_rvd Act_Deriv_);
 
         ActL(const ActL&);
 
@@ -35,11 +35,11 @@ namespace Nets
         void Set_Lrate(double new_lrate) override;
 
         rvd_F_rvd Get_Act_Func() const;
-        rvd_F_rvd Get_Act_Deriv() const;
-        void Set_Functions(rvd_F_rvd New_Act_Func, rvd_F_rvd New_Act_Deriv) override;
+        mat_F_rvd Get_Act_Deriv() const;
+        void Set_Functions(rvd_F_rvd New_Act_Func, mat_F_rvd New_Act_Deriv) override;
 
-        row_vector Forward(row_vector input, bool rec = 0) override;
-        row_vector Backward(row_vector gradients) override;
+        row_vector Forward(const row_vector& input, bool rec = 0) override;
+        row_vector Backward(const row_vector& gradients) override;
 
         std::istream& Read(std::istream& stream) override;
         std::ostream& Write(std::ostream& stream) override;

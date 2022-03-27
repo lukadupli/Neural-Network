@@ -66,20 +66,19 @@ namespace Nets
     double DenseL::Bias() const { return bias; }
     Eigen::MatrixXd DenseL::Weights() const { return *weights; }
 
-    row_vector DenseL::Forward(row_vector input, bool rec) {
+    row_vector DenseL::Forward(const row_vector& input, bool rec) {
         if (input.size() != input_sz) throw std::runtime_error("Dense layer: rececived query list doesn't match specified size\n");
-
         if (!rec) cache->clear();
 
         cache->push_back(input);
-        input *= (*weights);
+        row_vector out = input * (*weights);
 
-        for (int i = 0; i < output_sz; i++) input.coeffRef(i) += bias;
+        for (int i = 0; i < output_sz; i++) out.coeffRef(i) += bias;
 
-        return input;
+        return out;
     }
 
-    row_vector DenseL::Backward(row_vector gradients) {
+    row_vector DenseL::Backward(const row_vector& gradients) {
         if (gradients.size() != output_sz) throw std::runtime_error("Dense layer: rececived gradient list doesn't match specified size\n");
         if (cache->empty()) throw std::runtime_error("Backward without previous forward\n");
 

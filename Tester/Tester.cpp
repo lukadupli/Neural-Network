@@ -1,6 +1,6 @@
 // Tester.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-#define EXCLUDE
+#define EXCLUD
 
 #ifndef EXCLUDE
 
@@ -14,7 +14,7 @@
 #define f first
 #define s second
 
-constexpr auto LOCATION = "C:/Users/lukad/OneDrive/Dokumenti/VS_Projects/Neural_Network/neural_net_data/";
+constexpr auto LOCATION = "C:/Users/lukad/OneDrive/Dokumenti/VS_Projects/Neural_Network/neural_net_data/character_recognition/";
 
 using namespace std;
 using namespace cv;

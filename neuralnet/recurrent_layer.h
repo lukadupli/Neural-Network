@@ -1,8 +1,8 @@
 #pragma once
 
 #include "layers.h"
-#include "cells.h"
 #include "basic_cell.h"
+#include "gru_cell.h"
 
 namespace Nets {
 	const int REC = 2;
@@ -35,8 +35,8 @@ namespace Nets {
 		
 		Cells::Cell* Cell() const override;
 
-		row_vector Forward(row_vector in, bool rec = 0) override;
-		row_vector Backward(row_vector grads) override;
+		row_vector Forward(const row_vector& in, bool rec = 0) override;
+		row_vector Backward(const row_vector& grads) override;
 
 		std::istream& Read(std::istream& stream) override;
 		std::ostream& Write(std::ostream& stream) override;

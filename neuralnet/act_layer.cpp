@@ -3,7 +3,7 @@
 
 namespace Nets
 {
-    ActL::ActL(rvd_F_rvd Act_Func_, rvd_F_rvd Act_Deriv_) {
+    ActL::ActL(rvd_F_rvd Act_Func_, mat_F_rvd Act_Deriv_) {
         Act_Func = Act_Func_;
         Act_Deriv = Act_Deriv_;
     }
@@ -31,28 +31,28 @@ namespace Nets
     void ActL::Set_Lrate(double new_lrate) {};
 
     ActL::rvd_F_rvd ActL::Get_Act_Func() const { return Act_Func; }
-    ActL::rvd_F_rvd ActL::Get_Act_Deriv() const { return Act_Deriv; }
-    void ActL::Set_Functions(rvd_F_rvd New_Act_Func, rvd_F_rvd New_Act_Deriv) {
+    ActL::mat_F_rvd ActL::Get_Act_Deriv() const { return Act_Deriv; }
+    void ActL::Set_Functions(rvd_F_rvd New_Act_Func, mat_F_rvd New_Act_Deriv) {
         Act_Func = New_Act_Func;
         Act_Deriv = New_Act_Deriv;
     }
 
-    row_vector ActL::Forward(row_vector input, bool rec) { 
+    row_vector ActL::Forward(const row_vector& input, bool rec) { 
         if (!rec) cache->clear();
 
         cache->push_back(input);
         return Act_Func(input); 
     }
 
-    row_vector ActL::Backward(row_vector gradients) {
+    row_vector ActL::Backward(const row_vector& gradients) {
         if (cache->empty()) throw std::runtime_error("Backward without previous forward\n");
 
-        row_vector ret = Act_Deriv(cache->back());
+        matrix deriv = Act_Deriv(cache->back());
         cache->pop_back();
 
-        for (int i = 0; i < gradients.size(); i++) ret(i) *= gradients(i);
+        //std::cout << "ACTL: " << gradients << '\n';
 
-        return ret;
+        return (deriv * gradients.transpose()).transpose();
     }
 
     std::istream& ActL::Read(std::istream& stream) { return stream; }

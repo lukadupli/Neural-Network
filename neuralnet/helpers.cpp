@@ -7,6 +7,17 @@ namespace Nets {
         return (val - mini1) / (maxi1 - mini1) * (maxi2 - mini2) + mini2;
     }
 
+    row_vector Clip(const row_vector& rv, double mini, double maxi)
+    {
+        row_vector ret = rv;
+        for (auto& e : ret) {
+            e = std::min(e, maxi);
+            e = std::max(e, mini);
+        }
+
+        return ret;
+    }
+
     row_vector Sigmoid(const row_vector& in) {
         row_vector ret(in.size());
 
@@ -14,10 +25,13 @@ namespace Nets {
 
         return ret;
     }
-    row_vector Sigmoid_Deriv(const row_vector& in) {
-        row_vector ret = Sigmoid(in);
+    matrix Sigmoid_Deriv(const row_vector& in) {
+        row_vector sigmoid = Sigmoid(in);
+        matrix ret(in.size(), in.size());
 
-        for (int i = 0; i < in.size(); i++) ret(i) = ret(i) * (1 - ret(i));
+        for (int i = 0; i < ret.rows(); i++) {
+            for (int j = 0; j < ret.cols(); j++) ret(i, j) = (i == j) ? sigmoid(i) * (1 - sigmoid(i)) : 0;
+        }
 
         return ret;
     }
@@ -28,9 +42,14 @@ namespace Nets {
 
         return ret;
     }
-    row_vector Tanh_Deriv(const row_vector& in) {
-        row_vector ret = Tanh(in);
-        for (auto& e : ret) e = 1 - e * e;
+    matrix Tanh_Deriv(const row_vector& in) {
+        row_vector tanh = Tanh(in);
+        matrix ret(in.size(), in.size());
+
+        for (int i = 0; i < ret.rows(); i++) {
+            for (int j = 0; j < ret.cols(); j++) ret(i, j) = (i == j) ? 1 - tanh(i) * tanh(i) : 0;
+
+        }
 
         return ret;
     }
@@ -42,10 +61,12 @@ namespace Nets {
 
         return ret;
     }
-    row_vector ReLU_Deriv(const row_vector& in) {
-        row_vector ret = in;
+    matrix ReLU_Deriv(const row_vector& in) {
+        matrix ret(in.size(), in.size());
 
-        for (auto& e : ret) e = (e > 0);
+        for (int i = 0; i < in.rows(); i++) {
+            for (int j = 0; j < in.cols(); j++) ret(i, j) = (i == j) ? (in(i) > 0) : 0;
+        }
 
         return ret;
     }
@@ -60,15 +81,15 @@ namespace Nets {
         return ret;
     }
 
-    row_vector Softmax_Deriv(const row_vector& in) {
+    matrix Softmax_Deriv(const row_vector& in) {
         row_vector softmax = Softmax(in);
         
-        row_vector ret = row_vector::Zero(in.size());
+        matrix ret(in.size(), in.size());
 
         for (int i = 0; i < in.size(); i++) {
             for (int j = 0; j < in.size(); j++) {
-                if (j == i) ret(i) += softmax(i) * (1 - softmax(i));
-                else ret(i) -= softmax(i) * softmax(j);
+                if (j == i) ret(i, j) = softmax(i) * (1 - softmax(i));
+                else ret(i, j) = -softmax(i) * softmax(j);
             }
         }
         return ret;
@@ -119,7 +140,7 @@ namespace Nets {
         row_vector ret(out.size());
 
         for (int i = 0; i < out.size(); i++) {
-            ret(i) = target(i) == 1 ? -1. / out(i) : 0;
+            ret(i) = target(i) ? -1. / out(i) : 0;
         }
 
         return ret;

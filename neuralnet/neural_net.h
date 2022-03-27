@@ -23,6 +23,7 @@ namespace Nets
         typedef row_vector(*rvd_F_rvd_rvd)(const row_vector&, const row_vector&);
         typedef double(*d_F_rvd_rvd)(const row_vector&, const row_vector&);
         typedef row_vector(*rvd_F_rvd)(const row_vector&);
+        typedef matrix(*mat_F_rvd)(const row_vector&);
         
         d_F_rvd_rvd Loss_Func = nullptr;
         rvd_F_rvd_rvd Loss_Deriv = Sq_Loss_Deriv;
@@ -45,7 +46,7 @@ namespace Nets
 
         void Universal_Lrate(double lrate);
         void Universal_Bias_Lrate(double bias_lrate);
-        void Universal_Activation(rvd_F_rvd Act_Func, rvd_F_rvd Act_Deriv);
+        void Universal_Activation(rvd_F_rvd Act_Func, mat_F_rvd Act_Deriv);
 
         row_vector Query(row_vector input, bool rec = 0);
         row_vector Query(const std::vector<double>& input, bool rec = 0);

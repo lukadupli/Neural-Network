@@ -1,0 +1,20 @@
+this is happy 1
+i am good 1
+this is not happy 0
+i am not good 0
+this is not bad 1
+i am not sad 1
+i am very good 1
+this is very bad 0
+i am very sad 0
+this is bad not good 0
+this is good and happy 1
+i am not good and not happy 0
+i am not at all sad 1
+this is not at all good 0
+this is not at all bad 1
+this is good right now 1
+this is sad right now 0
+this is very bad right now 0
+this was good earlier 1
+i was not happy and not good earlier 0

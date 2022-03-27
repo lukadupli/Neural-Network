@@ -19,7 +19,6 @@ namespace Nets::Cells
         virtual Cell* Clone() const = 0;
 
         virtual void Reset_Hid() = 0;
-        virtual void Reset_Back_Hid() = 0;
 
         int Input_Size() const;
         int Hidden_Size() const;
@@ -30,8 +29,8 @@ namespace Nets::Cells
         virtual void Set_In_Size(int input_sz_) = 0;
         virtual void Set_Out_Size(int output_sz_) = 0;
 
-        virtual row_vector Forward(row_vector in) = 0;
-        virtual row_vector Backward(row_vector grads) = 0;
+        virtual row_vector Forward(const row_vector& in) = 0;
+        virtual row_vector Backward(const row_vector& grads) = 0;
 
         virtual std::istream& Read(std::istream& stream) = 0;
         virtual std::ostream& Write(std::ostream& stream) = 0;

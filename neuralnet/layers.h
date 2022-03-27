@@ -16,6 +16,7 @@ namespace Nets {
         double (*Init_Random)(int, int);
 
         typedef row_vector(*rvd_F_rvd)(const row_vector&);
+        typedef matrix(*mat_F_rvd)(const row_vector&);
         typedef double (*dfii)(int, int);
 
         std::vector<row_vector>* cache = new std::vector<row_vector>;
@@ -41,10 +42,10 @@ namespace Nets {
         virtual void Set_Lrate(double) {}
         virtual void Set_Bias_Lrate(double) {}
 
-        virtual void Set_Functions(rvd_F_rvd, rvd_F_rvd) {}
+        virtual void Set_Functions(rvd_F_rvd, mat_F_rvd) {}
 
-        virtual row_vector Forward(row_vector, bool) = 0;
-        virtual row_vector Backward(row_vector) = 0;
+        virtual row_vector Forward(const row_vector&, bool) = 0;
+        virtual row_vector Backward(const row_vector&) = 0;
 
         virtual std::istream& Read(std::istream&) = 0;
         virtual std::ostream& Write(std::ostream&) = 0;

@@ -160,6 +160,7 @@
     <ClInclude Include="csv_read.h" />
     <ClInclude Include="dense_layer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="gru_cell.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="layers.h" />
     <ClInclude Include="neural_net.h" />

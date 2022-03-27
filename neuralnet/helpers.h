@@ -16,22 +16,24 @@ namespace Nets {
 
     template <typename T> using ilist = std::initializer_list<T>;
 
+    typedef Eigen::MatrixXd matrix;
     typedef Eigen::RowVectorXd row_vector;
     typedef Eigen::VectorXd col_vector;
 
     double Scale(double val, double mini1, double maxi1, double mini2, double maxi2);
+    row_vector Clip(const row_vector& rv, double mini, double maxi);
 
     row_vector Sigmoid(const row_vector& x);
-    row_vector Sigmoid_Deriv(const row_vector& x);
+    matrix Sigmoid_Deriv(const row_vector& x);
 
     row_vector Tanh(const row_vector& x);
-    row_vector Tanh_Deriv(const row_vector& x);
+    matrix Tanh_Deriv(const row_vector& x);
 
     row_vector ReLU(const row_vector& x);
-    row_vector ReLU_Deriv(const row_vector& x); 
+    matrix ReLU_Deriv(const row_vector& x); 
     
     row_vector Softmax(const row_vector& in);
-    row_vector Softmax_Deriv(const row_vector& in);
+    matrix Softmax_Deriv(const row_vector& in);
 
     double Default_Random(int, int);
 

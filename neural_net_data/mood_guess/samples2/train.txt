@@ -1,0 +1,8 @@
+good 1
+bad 0
+happy 1
+sad 0
+not good 0
+not bad 1
+not happy 0
+not sad 1

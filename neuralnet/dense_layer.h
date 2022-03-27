@@ -47,8 +47,8 @@ namespace Nets
         double Bias() const;
         Eigen::MatrixXd Weights() const;
 
-        row_vector Forward(row_vector input, bool rec = 0) override;
-        row_vector Backward(row_vector gradients) override;
+        row_vector Forward(const row_vector& input, bool rec = 0) override;
+        row_vector Backward(const row_vector& gradients) override;
 
         std::istream& Read(std::istream& stream) override;
         std::ostream& Write(std::ostream& stream) override;

@@ -48,6 +48,9 @@
     <ClInclude Include="recurrent_layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gru_cell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="neuralnet.cpp">

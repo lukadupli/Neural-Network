@@ -39,7 +39,7 @@ namespace Nets {
 
 	Cells::Cell* RecL::Cell() const { return cell; }
 
-	row_vector RecL::Forward(row_vector in, bool rec) {
+	row_vector RecL::Forward(const row_vector& in, bool rec) {
 		if (in.size() % input_sz) throw std::runtime_error("Recurrent layer: cannot split the input into blocks of specified input size (remainder > 0)\n");
 		
 		in_count = in.size() / input_sz;
@@ -58,7 +58,7 @@ namespace Nets {
 		return out;
 	}
 
-	row_vector RecL::Backward(row_vector grads) {
+	row_vector RecL::Backward(const row_vector& grads) {
 		if ((out_type == BEGIN  && grads.size() != in_count * output_sz) || (out_type == END && grads.size() != output_sz)) throw std::runtime_error("Recurrent layer : rececived gradient list doesn't match specified size");
 
 		row_vector real_grads(in_count * output_sz);
@@ -68,7 +68,7 @@ namespace Nets {
 
 		row_vector new_grads(in_count * input_sz);
 		
-		cell->Reset_Back_Hid();
+		cell->Reset_Hid();
 		for (int i = in_count - 1; i >= 0; i--) {
 			row_vector res = cell->Backward(real_grads.segment(i * output_sz, output_sz));
 
