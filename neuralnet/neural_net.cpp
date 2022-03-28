@@ -113,7 +113,7 @@ namespace Nets
     }
 
     void Neural_Net::Load(std::istream& stream) {
-        for (auto e : layers) delete e;
+        for (auto e : layers) if(e) delete e;
         layers.clear();
 
         int n;

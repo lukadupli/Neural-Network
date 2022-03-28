@@ -25,8 +25,12 @@ namespace Nets::Cells
         int Output_Size() const;
         
         virtual Neural_Net& Gate() const;
+        virtual Neural_Net& Update_Gate() const;
+        virtual Neural_Net& Reset_Gate() const;
+        virtual Neural_Net& Output_Gate() const;
 
         virtual void Set_In_Size(int input_sz_) = 0;
+        virtual void Set_Hid_Size(int hidden_sz_) = 0;
         virtual void Set_Out_Size(int output_sz_) = 0;
 
         virtual row_vector Forward(const row_vector& in) = 0;

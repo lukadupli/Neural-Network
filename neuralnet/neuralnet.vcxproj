@@ -173,6 +173,7 @@
     <ClCompile Include="cells.cpp" />
     <ClCompile Include="csv_read.cpp" />
     <ClCompile Include="dense_layer.cpp" />
+    <ClCompile Include="gru_cell.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="layers.cpp" />
     <ClCompile Include="neuralnet.cpp" />

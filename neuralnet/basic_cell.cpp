@@ -39,6 +39,11 @@ namespace Nets::Cells
         input_sz = input_sz_;
         gate->Manage_In_Sizes(input_sz + hidden_sz);
     }
+    void Basic::Set_Hid_Size(int hidden_sz_) {
+        hidden_sz = hidden_sz_;
+        gate->Manage_In_Sizes(input_sz + hidden_sz);
+        gate->Manage_Out_Sizes(output_sz + hidden_sz);
+    }
     void Basic::Set_Out_Size(int output_sz_) {
         output_sz = output_sz_;
         gate->Manage_Out_Sizes(output_sz + hidden_sz);
@@ -61,7 +66,6 @@ namespace Nets::Cells
 
         row_vector carry(output_sz + hidden_sz);
         carry << grads, *hid;
-
         carry = gate->Back_Query(carry);
 
         *hid = carry.tail(hidden_sz);
@@ -69,13 +73,10 @@ namespace Nets::Cells
     }
 
     std::istream& Basic::Read(std::istream& stream) {
-        delete gate;
-        gate = new Neural_Net;
-
+        if (!gate) gate = new Neural_Net;
         stream >> input_sz >> hidden_sz >> output_sz >> *gate;
 
-        delete hid;
-        hid = new row_vector(hidden_sz);
+        hid->resize(hidden_sz);
         hid->setZero();
 
         return stream;

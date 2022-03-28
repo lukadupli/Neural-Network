@@ -24,6 +24,7 @@ namespace Nets::Cells {
         void Reset_Hid() override;
 
         void Set_In_Size(int input_sz_) override;
+        void Set_Hid_Size(int hidden_sz_) override;
         void Set_Out_Size(int output_sz_) override;
 
         row_vector Forward(const row_vector& in) override;

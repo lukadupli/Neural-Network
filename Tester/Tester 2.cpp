@@ -1,4 +1,4 @@
-#define EXCLUDE
+#define EXCLUD
 
 #ifndef EXCLUDE
 
@@ -24,7 +24,7 @@ const string LOCATION = R"(C:\Users\lukad\OneDrive\Dokumenti\VS_Projects\Neural_
 
 Neural_Net rnn({
 	new RecL(
-		new Basic(18, 10, 2,
+		new Basic(18, 20, 2,
 			Neural_Net({
 				new DenseL(28, 10, 0.01, 0.02),
 				new ActL(Tanh, Tanh_Deriv),
@@ -136,7 +136,8 @@ int main() {
 	auto raw_train = numerize(train_data, word_id);
 	auto raw_test = numerize(test_data, word_id);
 
-	//rnn.Load(full_path(R"(saved\mood_guess.txt)"));
+	/*rnn.Load(full_path(R"(saved\mood_guess.txt)"));
+	rnn.Layers().front()->Cell()->Gate().Universal_Activation(Tanh, Tanh_Deriv);*/
 
 	int epochs;
 	cout << "No. of epochs: "; cin >> epochs;
@@ -166,7 +167,7 @@ int main() {
 	}
 
 	cout << "Accuracy: " << (double)correct / raw_test.size() << '\n';
-	rnn.Save(full_path(R"(saved\mood_guess.txt)"));
+	//rnn.Save(full_path(R"(saved\mood_guess.txt)"));
 
 	return 0;
 }
