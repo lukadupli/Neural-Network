@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "gru_cell.h"
 
 namespace Nets::Cells {
 
@@ -20,9 +21,11 @@ namespace Nets::Cells {
 			});
 
 		output_gate = new Neural_Net({
-			new DenseL(input_sz, hidden_sz, 0.1, 0.2),
+			new DenseL(input_sz, hidden_sz, 0.01, 0.02),
 			new ActL(Tanh, Tanh_Deriv)
 			});
+
+
 	}
 
 	GRU::GRU(const GRU& org) {

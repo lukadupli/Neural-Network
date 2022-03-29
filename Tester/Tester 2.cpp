@@ -24,7 +24,7 @@ const string LOCATION = R"(C:\Users\lukad\OneDrive\Dokumenti\VS_Projects\Neural_
 
 Neural_Net rnn({
 	new RecL(
-		new Basic(18, 20, 2,
+		new Basic(18, 10, 2,
 			Neural_Net({
 				new DenseL(28, 10, 0.01, 0.02),
 				new ActL(Tanh, Tanh_Deriv),
