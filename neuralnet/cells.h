@@ -13,16 +13,15 @@ namespace Nets::Cells
     class Cell
     {
     protected:
-        int input_sz, hidden_sz, output_sz;
+        int input_sz, hidden_sz;
     public:
         virtual ~Cell() {}
         virtual Cell* Clone() const = 0;
 
-        virtual void Reset_Hid() = 0;
+        virtual void Reset_Hid(bool fwd) = 0;
 
         int Input_Size() const;
         int Hidden_Size() const;
-        int Output_Size() const;
         
         virtual Neural_Net& Gate() const;
         virtual Neural_Net& Update_Gate() const;
@@ -31,7 +30,6 @@ namespace Nets::Cells
 
         virtual void Set_In_Size(int input_sz_) = 0;
         virtual void Set_Hid_Size(int hidden_sz_) = 0;
-        virtual void Set_Out_Size(int output_sz_) = 0;
 
         virtual row_vector Forward(const row_vector& in) = 0;
         virtual row_vector Backward(const row_vector& grads) = 0;

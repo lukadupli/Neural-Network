@@ -3,7 +3,6 @@
 
 int Nets::Cells::Cell::Input_Size() const { return input_sz; }
 int Nets::Cells::Cell::Hidden_Size() const { return hidden_sz; }
-int Nets::Cells::Cell::Output_Size() const { return output_sz; }
 
 Nets::Neural_Net& Nets::Cells::Cell::Gate() const
 {

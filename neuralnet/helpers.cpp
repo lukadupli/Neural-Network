@@ -145,4 +145,25 @@ namespace Nets {
 
         return ret;
     }
+
+    matrix RowVec2Matrix(const row_vector& rv, int x, int y) {
+        if (rv.size() != x * y) throw std::runtime_error("RowVec2Matrix : vector size doesnt't match to matrix size\n");
+
+        matrix ret(x, y);
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) ret(i, j) = rv(i * x + y);
+        }
+
+        return ret;
+    }
+
+    row_vector Matrix2RowVec(const matrix& mat) {
+        row_vector ret(mat.rows() * mat.cols());
+
+        for (int i = 0; i < mat.rows(); i++) {
+            for (int j = 0; j < mat.cols(); j++) ret(i * mat.rows() + j) = mat(i, j);
+        }
+
+        return ret;
+    }
 }

@@ -14,18 +14,17 @@ namespace Nets::Cells {
     public:
         Basic() = default;
 
-        Basic(int input_sz_, int hidden_sz_, int output_sz_, const Neural_Net& gate_);
+        Basic(int input_sz_, int hidden_sz_, const Neural_Net& gate_);
         Basic(const Basic& org);
         ~Basic();
 
         row_vector& Hidden() const;
         Neural_Net& Gate() const override;
 
-        void Reset_Hid() override;
+        void Reset_Hid(bool fwd) override;
 
         void Set_In_Size(int input_sz_) override;
         void Set_Hid_Size(int hidden_sz_) override;
-        void Set_Out_Size(int output_sz_) override;
 
         row_vector Forward(const row_vector& in) override;
         row_vector Backward(const row_vector& grads) override;

@@ -24,11 +24,11 @@ namespace Nets {
         virtual ~Layer() {}
         virtual Layer* Clone() const = 0;
 
-        virtual int Input_Size() const = 0;
-        virtual void Set_In_Size(int) {};
+        virtual int Input_Size() const;
+        virtual void Set_In_Size(int) {}
 
-        virtual int Output_Size() const = 0;
-        virtual void Set_Out_Size(int) {};
+        virtual int Output_Size() const;
+        virtual void Set_Out_Size(int) {}
 
         virtual Cells::Cell* Cell() const;
 

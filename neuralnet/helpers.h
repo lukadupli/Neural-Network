@@ -43,6 +43,9 @@ namespace Nets {
     row_vector Sq_Loss_Deriv(const row_vector& out, const row_vector& target);
     double Sq_Loss(const row_vector& out, const row_vector& target);
 
+    matrix RowVec2Matrix(const row_vector& rv, int x, int y);
+    row_vector Matrix2RowVec(const matrix& mat);
+
     template <typename T>
     inline Eigen::RowVectorX <T> Vec2Eig(const std::vector<T>& v) {
         Eigen::RowVectorX <T> ret;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "layers.h"
+#include "cells.h"
 #include "basic_cell.h"
 #include "gru_cell.h"
 

@@ -12,6 +12,7 @@
 #include "dense_layer.h"
 #include "act_layer.h"
 #include "recurrent_layer.h"
+#include "conv_layer.h"
 
 namespace Nets
 {

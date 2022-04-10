@@ -3,10 +3,28 @@
 
 namespace Nets::Cells {
 
-	GRU::GRU(int input_sz_, int hidden_sz_, int output_sz_) {
+	GRU::GRU() {
+		hid = new row_vector(hidden_sz);
+
+		reset_gate = new Neural_Net({
+			new DenseL(input_sz + hidden_sz, hidden_sz, 0.6, 1.2),
+			new ActL(Sigmoid, Sigmoid_Deriv)
+			});
+
+		update_gate = new Neural_Net({
+			new DenseL(input_sz + hidden_sz, hidden_sz, 0.6, 1.2),
+			new ActL(Sigmoid, Sigmoid_Deriv)
+			});
+
+		output_gate = new Neural_Net({
+			new DenseL(input_sz, hidden_sz, 0.01, 0.02),
+			new ActL(Tanh, Tanh_Deriv)
+			});
+	}
+	
+	GRU::GRU(int input_sz_, int hidden_sz_) {
 		input_sz = input_sz_;
 		hidden_sz = hidden_sz_;
-		output_sz = output_sz_;
 
 		hid = new row_vector(hidden_sz);
 
@@ -24,14 +42,11 @@ namespace Nets::Cells {
 			new DenseL(input_sz, hidden_sz, 0.01, 0.02),
 			new ActL(Tanh, Tanh_Deriv)
 			});
-
-
 	}
 
 	GRU::GRU(const GRU& org) {
 		input_sz = org.Input_Size();
 		hidden_sz = org.Hidden_Size();
-		output_sz = org.Output_Size();
 
 		hid = new row_vector(org.Hidden());
 
@@ -51,7 +66,7 @@ namespace Nets::Cells {
 	Neural_Net& GRU::Reset_Gate() const { return *reset_gate; }
 	Neural_Net& GRU::Output_Gate() const { return *output_gate; }
 
-	void GRU::Reset_Hid() { hid->setZero(); hid_cache->clear(); }
+	void GRU::Reset_Hid(bool fwd) { hid->setZero(); if(fwd) hid_cache->clear(); }
 
 	void GRU::Set_In_Size(int input_sz_) {
 		input_sz = input_sz_;
@@ -71,10 +86,6 @@ namespace Nets::Cells {
 		reset_gate->Manage_Out_Sizes(hidden_sz);
 		update_gate->Manage_Out_Sizes(hidden_sz);
 		output_gate->Manage_Out_Sizes(hidden_sz);
-	}
-
-	void GRU::Set_Out_Size(int output_sz_) {
-
 	}
 
 	row_vector GRU::Forward(const row_vector& in) {
@@ -108,6 +119,8 @@ namespace Nets::Cells {
 	row_vector GRU::Backward(const row_vector& grads) {
 		if (grads.size() != hidden_sz) throw std::runtime_error("GRU cell: rececived gradient list doesn't match specified size\n");
 		if (hid_cache->empty()) throw std::runtime_error("GRU cell: backward without previous forward\n");
+
+		row_vector real_grads = *hid + grads;
 
 		row_vector prev_hid = hid_cache->back(); hid_cache->pop_back();
 		row_vector resetr = resetr_cache->back(); resetr_cache->pop_back();

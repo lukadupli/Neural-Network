@@ -8,7 +8,7 @@ namespace Nets {
 		out_type = out_type_;
 
 		input_sz = cell->Input_Size();
-		output_sz = cell->Output_Size();
+		output_sz = cell->Hidden_Size();
 	}
 	RecL::RecL(const RecL& org) {
 		cell = org.Cell()->Clone();
@@ -31,7 +31,7 @@ namespace Nets {
 
 	int RecL::Output_Size() const { return output_sz; }
 	void RecL::Set_Out_Size(int output_sz_) {
-		cell->Set_Out_Size(output_sz_);
+		cell->Set_Hid_Size(output_sz_);
 		output_sz = output_sz_;
 	}
 
@@ -46,7 +46,7 @@ namespace Nets {
 
 		row_vector out(in_count * output_sz);
 
-		cell->Reset_Hid();
+		cell->Reset_Hid(1);
 		for (int i = 0; i < in_count; i++) {
 			row_vector res = cell->Forward(in.segment(i * input_sz, input_sz));
 
@@ -68,7 +68,7 @@ namespace Nets {
 
 		row_vector new_grads(in_count * input_sz);
 		
-		cell->Reset_Hid();
+		cell->Reset_Hid(0);
 		for (int i = in_count - 1; i >= 0; i--) {
 			row_vector res = cell->Backward(real_grads.segment(i * output_sz, output_sz));
 

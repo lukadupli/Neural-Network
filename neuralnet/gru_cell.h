@@ -7,7 +7,7 @@ namespace Nets::Cells {
 
 	class GRU : public CellCRTP<GRU> {
 	private:
-		row_vector* hid = new row_vector;
+		row_vector* hid = nullptr;
 
 		std::vector<row_vector>* resetr_cache = new std::vector<row_vector>;
 		std::vector<row_vector>* hid_cache = new std::vector<row_vector>;
@@ -19,9 +19,9 @@ namespace Nets::Cells {
 		Neural_Net* output_gate = nullptr;
 
 	public:
-		GRU() = default;
+		GRU();
 
-		GRU(int input_sz_, int hidden_sz_, int output_sz_);
+		GRU(int input_sz_, int hidden_sz_);
 		GRU(const GRU& org);
 		~GRU();
 
@@ -30,11 +30,10 @@ namespace Nets::Cells {
 		Neural_Net& Reset_Gate() const override;
 		Neural_Net& Output_Gate() const override;
 
-		void Reset_Hid() override;
+		void Reset_Hid(bool fwd) override;
 
 		void Set_In_Size(int input_sz_) override;
 		void Set_Hid_Size(int hidden_sz_) override;
-		void Set_Out_Size(int output_sz) override;
 
 		row_vector Forward(const row_vector& in) override;
 		row_vector Backward(const row_vector& grads) override;

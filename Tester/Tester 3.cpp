@@ -1,25 +1,34 @@
-#define EXCLUDE
+#define EXCLUD
 #ifndef EXCLUDE
 
 #include <iostream>
 
 #include <Eigen/Dense>
+
 #include "../neuralnet/helpers.h"
 
 using namespace std;
 using namespace Nets;
 
-row_vector rv1(3), rv2(3);
+matrix mat(2, 3);
+matrix Pad(const matrix& mat, int kernel_sz) {
+	matrix ret = matrix::Zero(mat.rows() + kernel_sz - 1, mat.cols() + kernel_sz - 1);
+
+	int row_start = (kernel_sz - 1) / 2 + ((kernel_sz - 1) % 2);
+	int col_start = (kernel_sz - 1) / 2 + ((kernel_sz - 1) % 2);
+	for (int i = 0; i < mat.rows(); i++) {
+		for (int j = 0; j < mat.cols(); j++) ret(row_start + i, col_start + j) = mat(i, j);
+	}
+
+	return ret;
+}
 
 int main() {
-	rv1 << 1, 2, 3;
-	rv2 << 4, 5, 6;
+	mat << 1, 2, 3, 4, 5, 6;
+	Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> arr(2, 3);
+	arr << 1, 2, 3, 4, 5, 6;
 
-	cout << rv1.cwiseProduct(rv2) << '\n';
-	cout << rv1 << '\n';
-
-	rv1 = rv1.cwiseProduct(rv2);
-	cout << -rv1;
+	cout << Pad(mat, 5);
 
 	return 0;
 }
