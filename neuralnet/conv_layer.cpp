@@ -61,5 +61,9 @@ namespace Nets {
 	double ConvL:: Lrate() const { return lrate; }
 	void ConvL::Set_Lrate(double new_lrate) { lrate = new_lrate; }
 
+	row_vector ConvL::Forward(const row_vector& in, bool rec) { return row_vector{}; }
+	row_vector ConvL::Backward(const row_vector& grads) { return row_vector{}; }
 
+	std::istream& ConvL::Read(std::istream& str) { return str; }
+	std::ostream& ConvL::Write(std::ostream& str) { return str; }
 }

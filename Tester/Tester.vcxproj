@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Own Digit Recognition.cpp" />
     <ClCompile Include="Tester 2.cpp" />
     <ClCompile Include="Tester 3.cpp" />
     <ClCompile Include="Tester.cpp" />

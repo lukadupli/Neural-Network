@@ -24,5 +24,8 @@
     <ClCompile Include="Tester 3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Own Digit Recognition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
