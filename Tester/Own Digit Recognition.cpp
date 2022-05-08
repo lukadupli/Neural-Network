@@ -36,9 +36,11 @@ double Random_Full(int in, int out) {
 }
 
 Neural_Net net({ new DenseL(28 * 28, 200, 0),
-               new ActL(),
+               new ActL(Tanh, Tanh_Deriv),
                new DenseL(200, 8, 0),
-               new ActL() }
+               new ActL(Softmax, Softmax_Deriv) },
+    Cross_Entropy_Loss_Deriv,
+    Cross_Entropy_Loss
 );
 
 const double MIN_IN = 0, MAX_IN = 1;
@@ -46,17 +48,19 @@ const double ZERO_OUT = 0, ONE_OUT = 1;
 
 bool load = 1, save = 0;
 
-string FullPath(const char* path) {
-    return string(LOCATION) + string(path);
+string FullPath(const string& path) {
+    return string(LOCATION) + path;
 }
+
+const string modelname = "netmodel2.txt";
 
 int main()
 {
-    if (load) net.Load(FullPath("netmodel1.txt"));
-
-    net.Universal_Lrate(0.6);
-    net.Universal_Bias_Lrate(1.2);
-    net.Universal_Activation(Sigmoid, Sigmoid_Deriv);
+    if (load) {
+        net.Load(FullPath(modelname));
+        net.Layers()[1]->Set_Functions(Tanh, Tanh_Deriv);
+        net.Layers()[3]->Set_Functions(Softmax, Softmax_Deriv);
+    }
 
     int corr = 0, cnt_all = 0;
 
