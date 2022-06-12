@@ -92,13 +92,15 @@ namespace Nets {
 			throw std::runtime_error("Recurrent layer read : corrupted file\n");
 		}
 
-		stream >> cell;
+		cell->Read(stream);
 
 		return stream;
 	}
 
 	std::ostream& RecL::Write(std::ostream& stream) {
-		stream << REC << '\n' << input_sz << ' ' << output_sz << ' ' << out_type << '\n' << cell << '\n';
+		stream << REC << '\n' << input_sz << ' ' << output_sz << ' ' << out_type << '\n';
+		cell->Write(stream);
+		stream << '\n';
 
 		return stream;
 	}

@@ -50,14 +50,12 @@ namespace Nets
         matrix deriv = Act_Deriv(cache->back());
         cache->pop_back();
 
-        //std::cout << "ACTL: " << gradients << '\n';
-
         return (deriv * gradients.transpose()).transpose();
     }
 
-    std::istream& ActL::Read(std::istream& stream) { return stream; }
+    std::istream& ActL::Read(std::istream& stream) { stream >> Act_Func >> Act_Deriv; return stream; }
     std::ostream& ActL::Write(std::ostream& stream) {
-        stream << ACT << '\n';
+        stream << ACT << '\n' << Act_Func << ' ' << Act_Deriv << '\n';
         return stream;
     }
 }

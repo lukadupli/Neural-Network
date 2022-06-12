@@ -66,7 +66,8 @@ namespace Nets::Cells
 
     std::istream& Basic::Read(std::istream& stream) {
         if (!gate) gate = new Neural_Net;
-        stream >> input_sz >> hidden_sz >> *gate;
+        stream >> input_sz >> hidden_sz;
+        gate->Load(stream);
 
         hid->resize(hidden_sz);
         hid->setZero();
@@ -74,7 +75,8 @@ namespace Nets::Cells
         return stream;
     }
     std::ostream& Basic::Write(std::ostream& stream) {
-        stream << BASIC_CELL << '\n' << input_sz << ' ' << hidden_sz << '\n' << *gate;
+        stream << BASIC_CELL << '\n' << input_sz << ' ' << hidden_sz << '\n';
+        gate->Save(stream);
 
         return stream;
     }

@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "neural_net.h"
+#include "layers.h"
 
 namespace Nets
 {
+    
     Neural_Net::Neural_Net(std::vector<Layer*> layers_, rvd_F_rvd_rvd Loss_Deriv_, d_F_rvd_rvd Loss_Func_) {
         layers = layers_;
         Loss_Deriv = Loss_Deriv_;
@@ -35,8 +37,8 @@ namespace Nets
 
         return ret;
     }
-    Neural_Net::rvd_F_rvd_rvd Neural_Net::Get_Loss_Deriv() const { return Loss_Deriv; }
-    Neural_Net::d_F_rvd_rvd Neural_Net::Get_Loss_Func() const { return Loss_Func; }
+    rvd_F_rvd_rvd Neural_Net::Get_Loss_Deriv() const { return Loss_Deriv; }
+    d_F_rvd_rvd Neural_Net::Get_Loss_Func() const { return Loss_Func; }
 
     void Neural_Net::Manage_In_Sizes(int input_size) {
         for (auto lay : layers) {
@@ -96,7 +98,7 @@ namespace Nets
     }
 
     void Neural_Net::Save(std::ostream& stream) {
-        stream << layers.size() << '\n';
+        stream << layers.size() << '\n' << Loss_Func << ' ' << Loss_Deriv << '\n';
 
         for (auto lay : layers) lay->Write(stream);
     }
@@ -117,7 +119,7 @@ namespace Nets
         layers.clear();
 
         int n;
-        stream >> n;
+        stream >> n >> Loss_Func >> Loss_Deriv;
 
         if (n < 0) throw std::runtime_error("bad data given to load");
         for (int i = 0; i < n; i++) {
@@ -127,23 +129,22 @@ namespace Nets
             switch (ltype) {
             case DENSE:
                 layers.push_back(new DenseL);
-                stream >> layers.back();
 
                 break;
             case ACT:
                 layers.push_back(new ActL);
-                stream >> layers.back();
 
                 break;
             case REC:
                 layers.push_back(new RecL);
-                stream >> layers.back();
 
                 break;
             default:
                 throw std::runtime_error("bad data given to load");
                 break;
             }
+
+            layers.back()->Read(stream);
         }
     }
     void Neural_Net::Load(const std::string& path) {

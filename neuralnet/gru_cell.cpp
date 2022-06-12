@@ -136,14 +136,23 @@ namespace Nets::Cells {
 	}
 
 	std::istream& GRU::Read(std::istream& stream) {
-		stream >> input_sz >> hidden_sz >> *reset_gate >> *update_gate >> *output_gate;
+		stream >> input_sz >> hidden_sz;
+		reset_gate->Load(stream);
+		update_gate->Load(stream);
+		output_gate->Load(stream);
 
 		return stream;
 	}
 
 	std::ostream& GRU::Write(std::ostream& stream) {
 		stream << GRU_CELL << '\n' << input_sz << ' ' << hidden_sz << '\n';
-		stream << *reset_gate << '\n' << *update_gate << '\n' << *output_gate << '\n';
+
+		reset_gate->Save(stream);
+		stream << '\n';
+		update_gate->Save(stream);
+		stream << '\n';
+		output_gate->Save(stream);
+		stream << '\n';
 
 		return stream;
 	}
