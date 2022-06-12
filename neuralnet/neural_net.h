@@ -20,11 +20,6 @@ namespace Nets
     {
     private:
         std::vector<Layer*> layers = {};
-
-        typedef row_vector(*rvd_F_rvd_rvd)(const row_vector&, const row_vector&);
-        typedef double(*d_F_rvd_rvd)(const row_vector&, const row_vector&);
-        typedef row_vector(*rvd_F_rvd)(const row_vector&);
-        typedef matrix(*mat_F_rvd)(const row_vector&);
         
         d_F_rvd_rvd Loss_Func = nullptr;
         rvd_F_rvd_rvd Loss_Deriv = Sq_Loss_Deriv;

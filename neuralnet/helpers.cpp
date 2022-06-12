@@ -146,8 +146,8 @@ namespace Nets {
         return ret;
     }
 
-    matrix RowVec2Matrix(const row_vector& rv, int x, int y) {
-        if (rv.size() != x * y) throw std::runtime_error("RowVec2Matrix : vector size doesnt't match to matrix size\n");
+    matrix RowVec2Matrix(const row_vector& rv) {
+        int x = rv(rv.size() - 1), y = rv(rv.size() - 2);
 
         matrix ret(x, y);
         for (int i = 0; i < x; i++) {
@@ -158,12 +158,76 @@ namespace Nets {
     }
 
     row_vector Matrix2RowVec(const matrix& mat) {
-        row_vector ret(mat.rows() * mat.cols());
+        row_vector ret(mat.rows() * mat.cols() + 2);
 
         for (int i = 0; i < mat.rows(); i++) {
             for (int j = 0; j < mat.cols(); j++) ret(i * mat.rows() + j) = mat(i, j);
         }
 
+        ret(mat.rows() * mat.cols()) = mat.rows();
+        ret(mat.rows() * mat.cols() + 1) = mat.rows();
+
         return ret;
     }
+
+    std::istream& operator>>(std::istream& str, rvd_F_rvd& func)
+    {
+        int id;
+        str >> id;
+
+        func = ActDecode[id];
+
+        return str;
+    }
+    std::ostream& operator<<(std::ostream& str, rvd_F_rvd& func)
+    {
+        str << ActEncode[func];
+        return str;
+    }
+
+    std::istream& operator>>(std::istream& str, mat_F_rvd& func)
+    {
+        int id;
+        str >> id;
+
+        func = ActDerivDecode[id];
+
+        return str;
+    }
+    std::ostream& operator<<(std::ostream& str, mat_F_rvd& func)
+    {
+        str << ActDerivEncode[func];
+        return str;
+    }
+
+    std::istream& operator>>(std::istream& str, d_F_rvd_rvd& func)
+    {
+        int id;
+        str >> id;
+
+        func = LossDecode[id];
+
+        return str;
+    }
+    std::ostream& operator<<(std::ostream& str, d_F_rvd_rvd& func)
+    {
+        str << LossEncode[func];
+        return str;
+    }
+
+    std::istream& operator>>(std::istream& str, rvd_F_rvd_rvd& func)
+    {
+        int id;
+        str >> id;
+
+        func = LossDerivDecode[id];
+
+        return str;
+    }
+    std::ostream& operator<<(std::ostream& str, rvd_F_rvd_rvd& func)
+    {
+        str << LossDerivEncode[func];
+        return str;
+    }
+
 }

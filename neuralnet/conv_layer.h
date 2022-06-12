@@ -5,13 +5,11 @@
 
 namespace Nets {
 	const int CONV = 3;
-	const int VALID_PAD = 0, SAME_PAD = 1;
 
 	class ConvL : public LayerCRTP<ConvL> {
 	private:
 		double lrate = 0.6;
 
-		int padding = SAME_PAD;
 		int kernel_sz = 3, kernel_cnt = 8;
 		std::vector<matrix>* kernels = new std::vector<matrix>;
 
@@ -21,12 +19,10 @@ namespace Nets {
 	public:
 		ConvL() = default;
 
-		ConvL(int kernel_sz_, int kernel_cnt_, int padding_, double lrate_, double(*Init_Random_)(int, int) = Default_Random);
+		ConvL(int kernel_sz_, int kernel_cnt_, double lrate_, double(*Init_Random_)(int, int) = Default_Random);
 		ConvL(const ConvL& org);
 
 		~ConvL();
-
-		int Padding() const;
 		
 		std::vector<matrix> Kernels() const;
 

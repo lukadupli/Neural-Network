@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <random>
 
@@ -30,8 +31,8 @@ namespace Nets {
     matrix Tanh_Deriv(const row_vector& x);
 
     row_vector ReLU(const row_vector& x);
-    matrix ReLU_Deriv(const row_vector& x); 
-    
+    matrix ReLU_Deriv(const row_vector& x);
+
     row_vector Softmax(const row_vector& in);
     matrix Softmax_Deriv(const row_vector& in);
 
@@ -46,6 +47,60 @@ namespace Nets {
     matrix RowVec2Matrix(const row_vector& rv, int x, int y);
     row_vector Matrix2RowVec(const matrix& mat);
 
+    // --------------- Act --------------- //
+    typedef row_vector(*rvd_F_rvd)(const row_vector&);
+
+    std::vector<rvd_F_rvd> ActDecode{ Sigmoid, Tanh, ReLU, Softmax };
+    std::map<rvd_F_rvd, int> ActEncode{
+        {Sigmoid, 0},
+        {Tanh, 1},
+        {ReLU, 2},
+        {Softmax, 3}
+    };
+
+    std::istream& operator>>(std::istream& str, rvd_F_rvd& func);
+    std::ostream& operator<<(std::ostream& str, rvd_F_rvd& func);
+
+    // --------------- ActDeriv --------------- //
+    typedef matrix(*mat_F_rvd)(const row_vector&);
+
+    std::vector<mat_F_rvd> ActDerivDecode{ Sigmoid_Deriv, Tanh_Deriv, ReLU_Deriv, Softmax_Deriv };
+    std::map<mat_F_rvd, int> ActDerivEncode{
+        {Sigmoid_Deriv, 0},
+        {Tanh_Deriv, 1},
+        {ReLU_Deriv, 2},
+        {Softmax_Deriv, 3}
+    };
+
+    std::istream& operator>>(std::istream& str, mat_F_rvd& func);
+    std::ostream& operator<<(std::ostream& str, mat_F_rvd& func);
+    
+    // --------------- Loss --------------- //
+    typedef double(*d_F_rvd_rvd)(const row_vector&, const row_vector&);
+
+    std::vector<d_F_rvd_rvd> LossDecode{ Sq_Loss, Cross_Entropy_Loss};
+    std::map<d_F_rvd_rvd, int> LossEncode{
+        {Sq_Loss, 0},
+        {Cross_Entropy_Loss, 1}
+    };
+
+    std::istream& operator>>(std::istream& str, d_F_rvd_rvd& func);
+    std::ostream& operator<<(std::ostream& str, d_F_rvd_rvd& func);
+
+    // --------------- LossDeriv --------------- //
+    typedef row_vector(*rvd_F_rvd_rvd)(const row_vector&, const row_vector&);
+
+    std::vector<rvd_F_rvd_rvd> LossDerivDecode{ Sq_Loss_Deriv, Cross_Entropy_Loss_Deriv };
+    std::map<rvd_F_rvd_rvd, int> LossDerivEncode{
+        {Sq_Loss_Deriv, 0},
+        {Cross_Entropy_Loss_Deriv, 1}
+    };
+
+    std::istream& operator>>(std::istream& str, rvd_F_rvd_rvd& func);
+    std::ostream& operator<<(std::ostream& str, rvd_F_rvd_rvd& func);
+
+    // ----------------- END ----------------- //
+
     template <typename T>
     inline Eigen::RowVectorX <T> Vec2Eig(const std::vector<T>& v) {
         Eigen::RowVectorX <T> ret;
@@ -57,7 +112,4 @@ namespace Nets {
 
         return ret;
     }
-
-    
-
 }
