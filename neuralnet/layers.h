@@ -18,8 +18,6 @@ namespace Nets {
         typedef row_vector(*rvd_F_rvd)(const row_vector&);
         typedef matrix(*mat_F_rvd)(const row_vector&);
         typedef double (*dfii)(int, int);
-
-        std::vector<row_vector>* cache = new std::vector<row_vector>;
     public:
         virtual ~Layer() {}
         virtual Layer* Clone() const = 0;
@@ -36,8 +34,6 @@ namespace Nets {
 
         void Set_Init_Func(dfii);
         dfii Init_Func() const;
-
-        void Clear_Cache();
 
         virtual void Set_Lrate(double) {}
         virtual void Set_Bias_Lrate(double) {}

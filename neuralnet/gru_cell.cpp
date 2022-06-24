@@ -8,17 +8,17 @@ namespace Nets::Cells {
 
 		reset_gate = new Neural_Net({
 			new DenseL(input_sz + hidden_sz, hidden_sz, 0.6, 1.2),
-			new ActL(Sigmoid, Sigmoid_Deriv)
+			new ActL(Sigmoid, SigmoidDeriv)
 			});
 
 		update_gate = new Neural_Net({
 			new DenseL(input_sz + hidden_sz, hidden_sz, 0.6, 1.2),
-			new ActL(Sigmoid, Sigmoid_Deriv)
+			new ActL(Sigmoid, SigmoidDeriv)
 			});
 
 		output_gate = new Neural_Net({
 			new DenseL(input_sz, hidden_sz, 0.01, 0.02),
-			new ActL(Tanh, Tanh_Deriv)
+			new ActL(Tanh, TanhDeriv)
 			});
 	}
 	
@@ -30,17 +30,17 @@ namespace Nets::Cells {
 
 		reset_gate = new Neural_Net({
 			new DenseL(input_sz + hidden_sz, hidden_sz, 0.6, 1.2),
-			new ActL(Sigmoid, Sigmoid_Deriv)
+			new ActL(Sigmoid, SigmoidDeriv)
 			});
 
 		update_gate = new Neural_Net({
 			new DenseL(input_sz + hidden_sz, hidden_sz, 0.6, 1.2),
-			new ActL(Sigmoid, Sigmoid_Deriv)
+			new ActL(Sigmoid, SigmoidDeriv)
 			});
 
 		output_gate = new Neural_Net({
 			new DenseL(input_sz, hidden_sz, 0.01, 0.02),
-			new ActL(Tanh, Tanh_Deriv)
+			new ActL(Tanh, TanhDeriv)
 			});
 	}
 

@@ -14,8 +14,10 @@ namespace Nets
     private:
         int sz;
 
+        std::vector<row_vector>* cache = new std::vector<row_vector>;
+
         row_vector (*Act_Func)(const row_vector&) = Sigmoid;
-        matrix (*Act_Deriv)(const row_vector&) = Sigmoid_Deriv;
+        matrix (*Act_Deriv)(const row_vector&) = SigmoidDeriv;
     public:
         ActL() = default;
         ActL(rvd_F_rvd Act_Func_, mat_F_rvd Act_Deriv_);

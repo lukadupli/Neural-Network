@@ -160,12 +160,14 @@
     <ClInclude Include="conv_layer.h" />
     <ClInclude Include="csv_read.h" />
     <ClInclude Include="dense_layer.h" />
+    <ClInclude Include="flatten_layer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="gru_cell.h" />
     <ClInclude Include="helpers.h" />
     <ClInclude Include="layers.h" />
     <ClInclude Include="neural_net.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="pool_layer.h" />
     <ClInclude Include="recurrent_layer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +177,7 @@
     <ClCompile Include="conv_layer.cpp" />
     <ClCompile Include="csv_read.cpp" />
     <ClCompile Include="dense_layer.cpp" />
+    <ClCompile Include="flatten_layer.cpp" />
     <ClCompile Include="gru_cell.cpp" />
     <ClCompile Include="helpers.cpp" />
     <ClCompile Include="layers.cpp" />
@@ -186,6 +189,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="pool_layer.cpp" />
     <ClCompile Include="recurrent_layer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

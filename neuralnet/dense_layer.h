@@ -21,11 +21,13 @@ namespace Nets
         Eigen::MatrixXd* weights;
         double bias;
 
+        std::vector<row_vector>* cache = new std::vector<row_vector>;
+
         void Weight_Init(int input, int output, bool del = 1);
 
     public:
         DenseL() = default;
-        DenseL(int input_sz_, int output_sz_, double lrate_, double bias_lrate_ = NAN, double (*Init_Random_)(int, int) = Default_Random);
+        DenseL(int input_sz_, int output_sz_, double lrate_, double bias_lrate_ = NAN, double (*Init_Random_)(int, int) = DefaultRandom);
         DenseL(const DenseL&);
 
         ~DenseL();

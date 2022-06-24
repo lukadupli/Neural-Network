@@ -13,6 +13,8 @@
 #include "act_layer.h"
 #include "recurrent_layer.h"
 #include "conv_layer.h"
+#include "pool_layer.h"
+#include "flatten_layer.h"
 
 namespace Nets
 {
@@ -22,12 +24,12 @@ namespace Nets
         std::vector<Layer*> layers = {};
         
         d_F_rvd_rvd Loss_Func = nullptr;
-        rvd_F_rvd_rvd Loss_Deriv = Sq_Loss_Deriv;
+        rvd_F_rvd_rvd Loss_Deriv = SqLossDeriv;
 
     public:
         Neural_Net() = default;
-        Neural_Net(std::vector<Layer*> layers_, rvd_F_rvd_rvd Loss_Deriv_ = Sq_Loss_Deriv, d_F_rvd_rvd Loss_Func_ = nullptr);
-        Neural_Net(const char* path, rvd_F_rvd_rvd Loss_Deriv_ = Sq_Loss_Deriv, d_F_rvd_rvd Loss_Func_ = nullptr);
+        Neural_Net(std::vector<Layer*> layers_, rvd_F_rvd_rvd Loss_Deriv_ = SqLossDeriv, d_F_rvd_rvd Loss_Func_ = nullptr);
+        Neural_Net(const char* path, rvd_F_rvd_rvd Loss_Deriv_ = SqLossDeriv, d_F_rvd_rvd Loss_Func_ = nullptr);
         ~Neural_Net();
 
         Neural_Net(const Neural_Net& org);

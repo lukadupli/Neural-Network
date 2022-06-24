@@ -1,5 +1,5 @@
 
-#define EXCLUD
+#define EXCLUDE
 
 #ifndef EXCLUDE
 
@@ -46,20 +46,20 @@ Neural_Net net({ new DenseL(28 * 28, 200, 0),
 const double MIN_IN = 0, MAX_IN = 1;
 const double ZERO_OUT = 0, ONE_OUT = 1;
 
-bool load = 1, save = 0;
+bool load = 1, save = 1;
 
 string FullPath(const string& path) {
     return string(LOCATION) + path;
 }
 
-const string modelname = "netmodel2.txt";
+const string load_modelname = "netmodel3.txt", save_modelname = "netmodel3.txt";
 
 int main()
 {
     if (load) {
-        net.Load(FullPath(modelname));
-        net.Layers()[1]->Set_Functions(Tanh, Tanh_Deriv);
-        net.Layers()[3]->Set_Functions(Softmax, Softmax_Deriv);
+        net.Load(FullPath(load_modelname));
+        /*net.Layers()[1]->Set_Functions(Tanh, Tanh_Deriv);
+        net.Layers()[3]->Set_Functions(Softmax, Softmax_Deriv);*/
     }
 
     int corr = 0, cnt_all = 0;
@@ -119,6 +119,8 @@ int main()
     }
 
     cout << "Performance: " << (double)corr / cnt_all * 100 << "%";
+
+    if (save) net.Save(FullPath(save_modelname));
 }
 
 #endif

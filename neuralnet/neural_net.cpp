@@ -139,6 +139,18 @@ namespace Nets
                 layers.push_back(new RecL);
 
                 break;
+            case CONV:
+                layers.push_back(new ConvL);
+
+                break;
+            case POOL:
+                layers.push_back(new PoolL);
+
+                break;
+            case FLAT:
+                layers.push_back(new FlattenL);
+
+                break;
             default:
                 throw std::runtime_error("bad data given to load");
                 break;

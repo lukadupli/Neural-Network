@@ -25,7 +25,7 @@ namespace Nets {
 
         return ret;
     }
-    matrix Sigmoid_Deriv(const row_vector& in) {
+    matrix SigmoidDeriv(const row_vector& in) {
         row_vector sigmoid = Sigmoid(in);
         matrix ret(in.size(), in.size());
 
@@ -42,7 +42,7 @@ namespace Nets {
 
         return ret;
     }
-    matrix Tanh_Deriv(const row_vector& in) {
+    matrix TanhDeriv(const row_vector& in) {
         row_vector tanh = Tanh(in);
         matrix ret(in.size(), in.size());
 
@@ -61,7 +61,7 @@ namespace Nets {
 
         return ret;
     }
-    matrix ReLU_Deriv(const row_vector& in) {
+    matrix ReLUDeriv(const row_vector& in) {
         matrix ret(in.size(), in.size());
 
         for (int i = 0; i < in.rows(); i++) {
@@ -81,7 +81,7 @@ namespace Nets {
         return ret;
     }
 
-    matrix Softmax_Deriv(const row_vector& in) {
+    matrix SoftmaxDeriv(const row_vector& in) {
         row_vector softmax = Softmax(in);
         
         matrix ret(in.size(), in.size());
@@ -95,7 +95,7 @@ namespace Nets {
         return ret;
     }
 
-    row_vector Sq_Loss_Deriv(const row_vector& out, const row_vector& target) {
+    row_vector SqLossDeriv(const row_vector& out, const row_vector& target) {
         if(out.size() != target.size()) throw std::runtime_error("Sq_Loss_Deriv : out and target sizes don't match\n");
 
         row_vector ret(out.size());
@@ -104,7 +104,7 @@ namespace Nets {
         return ret;
     }
 
-    double Sq_Loss(const row_vector& out, const row_vector& target)
+    double SqLoss(const row_vector& out, const row_vector& target)
     {
         if (out.size() != target.size()) throw std::runtime_error("Sq_Loss : out and target sizes don't match\n");
 
@@ -114,7 +114,7 @@ namespace Nets {
         return ret;
     }
 
-    double Default_Random(int in, int out) {
+    double DefaultRandom(int in, int out) {
         static std::random_device rd;
         std::mt19937 gen(rd());
 
@@ -122,7 +122,7 @@ namespace Nets {
         return normal(gen);
     }
 
-    double Cross_Entropy_Loss(const row_vector& out, const row_vector& target) {
+    double CrossEntropyLoss(const row_vector& out, const row_vector& target) {
         if(out.size() != target.size()) throw std::runtime_error("Cross_Entropy_Loss : out and target sizes don't match\n");
 
         double ret = 0.;
@@ -134,7 +134,7 @@ namespace Nets {
         return ret;
     }
 
-    row_vector Cross_Entropy_Loss_Deriv(const row_vector& out, const row_vector& target) {
+    row_vector CrossEntropyLossDeriv(const row_vector& out, const row_vector& target) {
         if (out.size() != target.size()) throw std::runtime_error("Cross_Entropy_Loss_Deriv : out and target sizes don't match\n");
 
         row_vector ret(out.size());
@@ -146,32 +146,111 @@ namespace Nets {
         return ret;
     }
 
-    matrix RowVec2Matrix(const row_vector& rv) {
-        int x = rv(rv.size() - 1), y = rv(rv.size() - 2);
+    std::vector<matrix> RowVecTo3D(const row_vector& rv) {
+        int x = rv(rv.size() - 3), y = rv(rv.size() - 2), z = rv(rv.size() - 1);
 
-        matrix ret(x, y);
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) ret(i, j) = rv(i * x + y);
+        std::vector<matrix> ret;
+        for (int i = 0; i < z; i++) {
+            ret.push_back(matrix{ x, y });
+            for (int j = 0; j < x; j++) {
+                for (int k = 0; k < y; k++) ret.back()(j, k) = rv(i * x * y + j * y + k);
+            }
         }
 
         return ret;
     }
 
-    row_vector Matrix2RowVec(const matrix& mat) {
-        row_vector ret(mat.rows() * mat.cols() + 2);
+    row_vector ThreeDToRowVec(const std::vector<matrix>& threed) {
+        int z = threed.size(), x = threed[0].rows(), y = threed[0].cols();
 
-        for (int i = 0; i < mat.rows(); i++) {
-            for (int j = 0; j < mat.cols(); j++) ret(i * mat.rows() + j) = mat(i, j);
+        row_vector ret{ z * x * y + 3 };
+
+        for (int i = 0; i < z; i++) {
+            for (int j = 0; j < x; j++) {
+                for (int k = 0; k < y; k++) ret(i * x * y + j * y + k) = threed[i](j, k);
+            }
         }
 
-        ret(mat.rows() * mat.cols()) = mat.rows();
-        ret(mat.rows() * mat.cols() + 1) = mat.rows();
+        ret(z * x * y) = x;
+        ret(z * x * y + 1) = y;
+        ret(z * x * y + 2) = z;
 
         return ret;
     }
+
+    double MaxPool(const matrix& mat) {
+        return mat.maxCoeff();
+    }
+    matrix MaxPoolDeriv(const matrix& mat, double grad) {
+        matrix ret = matrix::Zero(mat.rows(), mat.cols());
+
+        double maxi = mat.maxCoeff();
+
+        for (int x = 0; x < mat.rows(); x++) {
+            for (int y = 0; y < mat.cols(); y++) {
+                if (mat(x, y) == maxi) ret(x, y) = grad;
+            }
+        }
+
+        return ret;
+    }
+
+    double AvgPool(const matrix& mat) {
+        return mat.sum() / (mat.rows() * mat.cols());
+    }
+    matrix AvgPoolDeriv(const matrix& mat, double grad) {
+        matrix ret{ mat.rows(), mat.cols() };
+
+        ret.fill(grad);
+
+        return ret;
+    }
+
+    std::vector<rvd_F_rvd> ActDecode{ nullptr, Sigmoid, Tanh, ReLU, Softmax };
+    std::map<rvd_F_rvd, int> ActEncode{
+        {nullptr, 0},
+        {Sigmoid, 1},
+        {Tanh, 2},
+        {ReLU, 3},
+        {Softmax, 4}
+    };
+    std::vector<mat_F_rvd> ActDerivDecode{ nullptr, SigmoidDeriv, TanhDeriv, ReLUDeriv, SoftmaxDeriv };
+    std::map<mat_F_rvd, int> ActDerivEncode{
+        {nullptr, 0},
+        {SigmoidDeriv, 1},
+        {TanhDeriv, 2},
+        {ReLUDeriv, 3},
+        {SoftmaxDeriv, 4}
+    };
+
+    std::vector<d_F_rvd_rvd> LossDecode{ nullptr, SqLoss, CrossEntropyLoss };
+    std::map<d_F_rvd_rvd, int> LossEncode{
+        {nullptr, 0},
+        {SqLoss, 1},
+        {CrossEntropyLoss, 2}
+    };
+    std::vector<rvd_F_rvd_rvd> LossDerivDecode{ nullptr, SqLossDeriv, CrossEntropyLossDeriv };
+    std::map<rvd_F_rvd_rvd, int> LossDerivEncode{
+        {nullptr, 0},
+        {SqLossDeriv, 1},
+        {CrossEntropyLossDeriv, 2}
+    };
+    
+    std::vector<d_F_mat> PoolDecode{ nullptr, MaxPool, AvgPool };
+    std::map<d_F_mat, int> PoolEncode{
+        {nullptr, 0},
+        {MaxPool, 1},
+        {AvgPool, 2}
+    };
+    std::vector<mat_F_mat_d> PoolDerivDecode{ nullptr, MaxPoolDeriv, AvgPoolDeriv };
+    std::map<mat_F_mat_d, int> PoolDerivEncode{
+        {nullptr, 0},
+        {MaxPoolDeriv, 1},
+        {AvgPoolDeriv, 2}
+    };
 
     std::istream& operator>>(std::istream& str, rvd_F_rvd& func)
-    {
+    {        
         int id;
         str >> id;
 
@@ -181,7 +260,7 @@ namespace Nets {
     }
     std::ostream& operator<<(std::ostream& str, rvd_F_rvd& func)
     {
-        str << ActEncode[func];
+        str << ActEncode[func] << ' ';
         return str;
     }
 
@@ -196,7 +275,7 @@ namespace Nets {
     }
     std::ostream& operator<<(std::ostream& str, mat_F_rvd& func)
     {
-        str << ActDerivEncode[func];
+        str << ActDerivEncode[func] << ' ';
         return str;
     }
 
@@ -211,7 +290,7 @@ namespace Nets {
     }
     std::ostream& operator<<(std::ostream& str, d_F_rvd_rvd& func)
     {
-        str << LossEncode[func];
+        str << LossEncode[func] << ' ';
         return str;
     }
 
@@ -226,8 +305,33 @@ namespace Nets {
     }
     std::ostream& operator<<(std::ostream& str, rvd_F_rvd_rvd& func)
     {
-        str << LossDerivEncode[func];
+        str << LossDerivEncode[func] << ' ';
         return str;
     }
 
+    std::istream& operator>>(std::istream& str, d_F_mat& func) {
+        int id;
+        str >> id;
+
+        func = PoolDecode[id];
+
+        return str;
+    }
+    std::ostream& operator<<(std::ostream& str, d_F_mat& func) {
+        str << PoolEncode[func] << ' ';
+        return str;
+    }
+
+    std::istream& operator>>(std::istream& str, mat_F_mat_d& func) {
+        int id;
+        str >> id;
+
+        func = PoolDerivDecode[id];
+
+        return str;
+    }
+    std::ostream& operator<<(std::ostream& str, mat_F_mat_d& func) {
+        str << PoolDerivEncode[func] << ' ';
+        return str;
+    }
 }

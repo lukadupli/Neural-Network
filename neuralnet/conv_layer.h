@@ -13,13 +13,15 @@ namespace Nets {
 		int kernel_sz = 3, kernel_cnt = 8;
 		std::vector<matrix>* kernels = new std::vector<matrix>;
 
+		std::vector<std::vector<matrix>>* cache = new std::vector<std::vector<matrix>>;
+
 		void Generate_Kernels();
 		
 		matrix Pad(const matrix& mat);
 	public:
 		ConvL() = default;
 
-		ConvL(int kernel_sz_, int kernel_cnt_, double lrate_, double(*Init_Random_)(int, int) = Default_Random);
+		ConvL(int kernel_sz_, int kernel_cnt_, double lrate_, double(*Init_Random_)(int, int) = DefaultRandom);
 		ConvL(const ConvL& org);
 
 		~ConvL();

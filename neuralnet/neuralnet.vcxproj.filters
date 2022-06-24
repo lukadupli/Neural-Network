@@ -54,6 +54,12 @@
     <ClInclude Include="conv_layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pool_layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="flatten_layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="neuralnet.cpp">
@@ -93,6 +99,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="conv_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pool_layer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flatten_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
