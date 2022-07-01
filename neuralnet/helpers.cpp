@@ -61,11 +61,12 @@ namespace Nets {
 
         return ret;
     }
+
     matrix ReLUDeriv(const row_vector& in) {
         matrix ret(in.size(), in.size());
 
-        for (int i = 0; i < in.rows(); i++) {
-            for (int j = 0; j < in.cols(); j++) ret(i, j) = (i == j) ? (in(i) > 0) : 0;
+        for (int i = 0; i < ret.rows(); i++) {
+            for (int j = 0; j < ret.cols(); j++) ret(i, j) = (i == j) ? (in(i) > 0) : 0;
         }
 
         return ret;

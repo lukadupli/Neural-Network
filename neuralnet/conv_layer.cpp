@@ -117,7 +117,7 @@ namespace Nets {
 	}
 
 	std::istream& ConvL::Read(std::istream& str) { 
-		str >> kernel_sz >> kernel_cnt;
+		str >> kernel_sz >> kernel_cnt >> lrate;
 		kernels->clear();
 
 		for (int i = 0; i < kernel_cnt; i++) {
@@ -133,7 +133,7 @@ namespace Nets {
 	}
 
 	std::ostream& ConvL::Write(std::ostream& str) { 
-		str << CONV << '\n' << kernel_sz << ' ' << kernel_cnt << '\n';
+		str << CONV << '\n' << kernel_sz << ' ' << kernel_cnt << ' ' << lrate << '\n';
 		for (auto& e : *kernels) {
 			str << e << '\n';
 		}

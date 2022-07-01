@@ -1,4 +1,4 @@
-#define EXCLUD
+#define EXCLUDE
 #ifndef EXCLUDE
 
 #include <iostream>
@@ -106,29 +106,31 @@ ReadAndFlattenUbyteIdx3File(std::istream& stream) {
 }
 
 Neural_Net net{ {
-	new ConvL(3, 8, 0.001),
+	new ConvL(3, 8, 0.0001),
 	new PoolL(2, MaxPool, MaxPoolDeriv),
-	new ConvL(3, 8, 0.001),
+	new ConvL(3, 8, 0.0001),
 	new PoolL(2, MaxPool, MaxPoolDeriv),
 	new FlattenL(7 * 7 * 8 * 8),
-	new DenseL(7 * 7 * 8 * 8, 10, 0.01, 0.02),
+	new DenseL(7 * 7 * 8 * 8, 100, 0.01, 0.02),
+	new ActL(ReLU, ReLUDeriv),
+	new DenseL(100, 10, 0.01, 0.02),
 	new ActL(Softmax, SoftmaxDeriv)
 	},
 	CrossEntropyLossDeriv,
 	CrossEntropyLoss
 };
 
-const string modelname = "convnet_MNIST_model3.txt";
-
-void Train(bool load) {
+void Train(const string& save_file, const string& loss_dump, const string& load_file = "") {
 	cout << "Loading data...\n";
-	if (load) net.Load(FullPath(modelname));
+	if (load_file.size()) net.Load(FullPath(load_file));
 
-	ifstream labfile(FullPath("train-labels.idx1-ubyte"), std::ios::binary);
+	ifstream labfile(FullPath("MNIST_dataset\\train-labels.idx1-ubyte"), std::ios::binary);
 	auto labels = ReadUbyteIdx1File(labfile);
+	labfile.close();
 
-	ifstream imfile(FullPath("train-images.idx3-ubyte"), std::ios::binary);
+	ifstream imfile(FullPath("MNIST_dataset\\train-images.idx3-ubyte"), std::ios::binary);
 	auto images = ReadUbyteIdx3File(imfile);
+	imfile.close();
 
 	int how_many, step;
 	cout << "How many images to take: "; cin >> how_many;
@@ -140,33 +142,50 @@ void Train(bool load) {
 		how_many = images.size();
 	}
 
+	vector<double> losses;
 	double loss = 0;
 	for (int i = 0; i < how_many; i++) {
 		row_vector tar = row_vector::Zero(10);
 		tar[labels[i]] = 1;
 
-		loss += net.Train(ThreeDToRowVec(vector<matrix>{images[i]}), tar);
+		losses.push_back(net.Train(ThreeDToRowVec(vector<matrix>{images[i]}), tar));
+		loss += losses.back();
+
 		if ((i + 1) % step == 0) {
 			cout << "Passed " << i + 1 << " images, average loss is: " << loss / step << '\n';
+			if (isnan(loss)) {
+				cout << "Loss is NaN, breaking the training process...\n";
+				return;
+			}
+
 			loss = 0;
-			net.Save(FullPath(modelname));
+			net.Save(FullPath(save_file));
 		}
 	}
 
-	net.Save(FullPath(modelname));
+	net.Save(FullPath(save_file));
+	
+	ofstream csvfile(FullPath(loss_dump));
+	for (int i = 1; i <= how_many; i++) {
+		csvfile << i << ", " << losses[i - 1] << '\n';
+	}
+
+	csvfile.close();
 }
 
-void Test(bool load) {
+void Test(const string& modelname = "") {
 	cout << "Loading data...\n";
-	if (load) {
+	if (modelname.size()) {
 		net.Load(FullPath(modelname));
 	}
 
-	ifstream labfile(FullPath("test-labels.idx1-ubyte"), std::ios::binary);
+	ifstream labfile(FullPath("MNIST_dataset\\test-labels.idx1-ubyte"), std::ios::binary);
 	auto labels = ReadUbyteIdx1File(labfile);
+	labfile.close();
 
-	ifstream imfile(FullPath("test-images.idx3-ubyte"), std::ios::binary);
+	ifstream imfile(FullPath("MNIST_dataset\\test-images.idx3-ubyte"), std::ios::binary);
 	auto images = ReadUbyteIdx3File(imfile);
+	imfile.close();
 
 	int correct = 0;
 	cout << "Testing...\n";
@@ -193,8 +212,8 @@ void Test(bool load) {
 }
 
 int main() {
-	Train(0);
-	Test(0);
+	Train("convnet_MNIST_big_2.txt", "convnet_MNIST_big_2.csv", "convnet_MNIST_big.txt");
+	Test();
 
 	return 0;
 }

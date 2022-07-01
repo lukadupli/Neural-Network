@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{11b1fd14-103f-4ff6-a41f-8a6fc007d725}</ProjectGuid>
-    <RootNamespace>Tester</RootNamespace>
+    <ProjectGuid>{830b68bd-cad2-4f5d-bef8-a10f52453ee6}</ProjectGuid>
+    <RootNamespace>Calculator</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,21 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\opencv_455\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\opencv_455\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -119,14 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\eigen-3.4.0;C:\opencv_455\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\opencv_455\build\x64\vc15\bin;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>neuralnet.lib;opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>"C:\opencv_455\build\x64\vc15\lib\opencv_world455d.lib";%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,13 +130,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calculator.cpp" />
-    <ClCompile Include="ConvMNIST.cpp" />
-    <ClCompile Include="image slicer.cpp" />
-    <ClCompile Include="Own Digit Recognition.cpp" />
-    <ClCompile Include="Conv Own Digits.cpp" />
-    <ClCompile Include="Tester 2.cpp" />
-    <ClCompile Include="Tester 3.cpp" />
-    <ClCompile Include="Tester.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\neuralnet\neuralnet.vcxproj">
+      <Project>{654dae8c-997a-4efa-92cb-73cd05e0cf0a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

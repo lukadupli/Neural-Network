@@ -54,7 +54,7 @@ string FullPath(const string& path) {
     return string(LOCATION) + path;
 }
 
-const string load_modelname = "convnetmodel1.txt", save_modelname = "convnetmodel1.txt";
+const string load_modelname = "convnet_MNIST_9665.txt", save_modelname = "a.txt";
 
 void PrintDigit(const matrix& img) {
     for (int i = 0; i < 28; i++) {
