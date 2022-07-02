@@ -1,4 +1,4 @@
-#define EXCLUD
+#define EXCLUDE
 #ifndef EXCLUDE
 
 #include <iostream>

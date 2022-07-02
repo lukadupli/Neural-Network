@@ -2,7 +2,6 @@
 #include "conv_layer.h"
 
 namespace Nets {
-
 	void ConvL::Generate_Kernels() {
 		kernels->clear();
 
