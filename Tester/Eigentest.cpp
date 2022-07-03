@@ -84,25 +84,26 @@ template<typename T, int dims> void printrev(Eigen::Tensor<T, dims>& tensor, int
 	}
 }
 
-int input_r = 3, input_c = 3, input_d = 2;
-int kernel_r = 2, kernel_c = 2, kernel_d = 2;
+int input_r = 3, input_c = 2, input_d = 2;
+int kernel_r = 2, kernel_c = 1, kernel_d = 3;
 
 Eigen::Tensor<double, 3> in(input_d, input_r, input_c);
 Eigen::Tensor<double, 3> kernel(kernel_r, kernel_c, kernel_d);
 
 int main() {
 	in.setValues({
-		{{1, 2, 3},
-		{4, 5, 6},
-		{7, 8, 9}},
+		{{1, 2},
+		{4, 5},
+		{7, 8}},
 
-		{{1, 1, 1},
-		{1, 0, 0},
-		{0, 0, 1}}
+		{{1, 1},
+		{1, 0},
+		{0, 0}}
 		});
 	kernel.setValues({
-		{{1, 1}, {1, 0}},
-		{{1, 1}, {1, 1}}
+		{{1, 0, 3}},
+		{{2, 1, 1}}
+
 		});
 
 	auto temp = Nets::Tensor3DToRowVec(in);
@@ -117,7 +118,7 @@ int main() {
 	auto res = Nets::Convolve(in, kernel, Eigen::PADDING_SAME);
 	print(res, false);
 
-	/*cout << "Input tensor:\n";
+	cout << "Input tensor:\n";
 	print(in);
 	cout << "\n\n";
 
@@ -155,12 +156,14 @@ int main() {
 	print(contraction, false);
 	cout << "\n\n";
 
+	//Eigen::Tensor<double, 2> conresh = contraction.reshape(Eigen::array<ptrdiff_t, 2>{input_d, kernel_d, inp})
+
 	cout << "Final reshaping:\n";
-	Eigen::Tensor<double, 3> out = contraction.shuffle(Eigen::array<ptrdiff_t, 2>{1, 0}).reshape(Eigen::array<ptrdiff_t, 4>{input_d, input_r, input_c, kernel_d})
-		.shuffle(Eigen::array<ptrdiff_t, 4>{0, 3, 1, 2}).reshape(Eigen::array<ptrdiff_t, 3>{input_d* kernel_d, input_r, input_c});
+	Eigen::Tensor<double, 3> out = contraction.reshape(Eigen::array<ptrdiff_t, 4>{input_r, input_c, kernel_d, input_d})
+		.shuffle(Eigen::array<ptrdiff_t, 4>{2, 3, 0, 1}).reshape(Eigen::array<ptrdiff_t, 3>{input_d* kernel_d, input_r, input_c});
 
 	print(out, false);
-	cout << "\n\n";*/
+	cout << "\n\n";
 
 	return 0;
 }

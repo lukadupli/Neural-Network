@@ -31,10 +31,9 @@ namespace Nets {
 			.contract(
 				kernel.reshape(Eigen::array<ptrdiff_t, 2>{kernel_w* kernel_h, kernel_d}),
 				Eigen::array<Eigen::IndexPair<int>, 1>{Eigen::IndexPair<int>{1, 0}})
-			.shuffle(Eigen::array<ptrdiff_t, 2>{1, 0})
-			.reshape(Eigen::array<ptrdiff_t, 4>{output_d, output_w, output_h, kernel_d})
-			.shuffle(Eigen::array<ptrdiff_t, 4>{0, 3, 1, 2})
-			.reshape(Eigen::array<ptrdiff_t, 3>{ output_d* kernel_d, output_w, output_h });
+			.reshape(Eigen::array<ptrdiff_t, 4>{input_w, input_h, kernel_d, input_d})
+			.shuffle(Eigen::array<ptrdiff_t, 4>{2, 3, 0, 1})
+			.reshape(Eigen::array<ptrdiff_t, 3>{input_d* kernel_d, input_w, input_h});
 	}
 
 	template<typename NumType> 
@@ -56,10 +55,11 @@ namespace Nets {
 	private:
 		double lrate = 0.6;
 
+		Eigen::PaddingType padding;
 		int kernel_sz = 3, kernel_cnt = 8;
-		std::vector<matrix>* kernels = new std::vector<matrix>;
+		Eigen::Tensor<double, 3> kernel{ kernel_sz, kernel_sz, kernel_cnt };
 
-		std::vector<std::vector<matrix>>* cache = new std::vector<std::vector<matrix>>;
+		std::vector<Eigen::Tensor<double, 3>>* cache = new std::vector<Eigen::Tensor<double, 3>>;
 
 		void Generate_Kernels();
 		
@@ -72,7 +72,7 @@ namespace Nets {
 
 		~ConvL();
 		
-		std::vector<matrix> Kernels() const;
+		Eigen::Tensor<double, 3> Kernels() const;
 
 		double Lrate() const;
 		void Set_Lrate(double new_lrate) override;
